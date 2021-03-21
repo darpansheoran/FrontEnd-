@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Travel Landing Page</title>
+    <script
+      src="https://kit.fontawesome.com/ca2fc816bb.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <section class="showcase">
+      <header>
+        <h1>Travel</h1>
+        <div class="toggle">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-times active"></i>
+        </div>
+      </header>
+      <!-- Video -->
+      <video
+        src="./res/pexels-ahmed-abd-allah-5937356.mp4"
+        muted
+        loop
+        autoplay
+      ></video>
+      <div class="overlay"></div>
+      <div class="text">
+        <h1>Never stop</h1>
+        <h2>exploring the world</h2>
+        <p>
+            <blockquote>
+                “Once the Travel bug bites there is no known antidote, and I know that I shall be happily infected until the end of my life.”
+            </blockquote>
+            <figcaption>
+                &mdash; <cite>Anonymous</cite>  
+            </figcaption>
+        </p>
+        <a href="#" class="btn">Explore</a>
+      </div>
+      <ul class="social">
+        <li>
+          <a><i class="fab fa-facebook-f"></i></a>
+        </li>
+        <li>
+          <a><i class="fab fa-instagram"></i></a>
+        </li>
+        <li>
+          <a><i class="fab fa-twitter"></i></a>
+        </li>
+      </ul>
+    </section>
+    <div class="menu">
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">News</a></li>
+          <li><a href="#">Destination</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <script>
+        const bars = document.querySelector(".fa-bars");
+        const times = document.querySelector(".fa-times");
+        const showcase = document.querySelector(".showcase");
+        bars.addEventListener("click", () => {
+            showcase.classList.toggle('active');
+            bars.classList.add('active');
+            times.classList.remove('active');
+        });  
+        times.addEventListener("click", () => {
+            showcase.classList.toggle('active');
+            times.classList.add('active');
+            bars.classList.remove('active');
+        });  
+      </script>
+  </body>
+</html>
