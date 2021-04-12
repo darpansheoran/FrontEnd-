@@ -1,0 +1,77 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+nav {
+  background: #181a1b;
+  color: #52abea;
+  font-weight: 500;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  min-height: 7vh;
+}
+nav p {
+  display: inline;
+}
+nav div {
+  width: 40%;
+  margin: auto;
+  padding: 10px 0;
+}
+nav span {
+  float: right;
+}
+nav a {
+  color: whitesmoke;
+  padding: 0px 10px;
+}
+nav a:hover {
+  color: #52abea;
+}
+nav .active {
+  color: #52abea;
+}
+
+.showcase {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 93vh;
+  width: 100%;
+}
+.info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.info p {
+  color: whitesmoke;
+  font-weight: 700;
+  font-size: 2.7rem;
+  background-color: #181a1b;
+  border-radius: 10px;
+  padding: 6px 15px;
+}
+.info .colorVal {
+  color: #52abea;
+  font-weight: 500;
+}
+.info a {
+  margin-top: 40px;
+  font-size: 1.7rem;
+  color: black;
+  border: #181a1b 1px solid;
+  border-radius: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  transition: 0.5s;
+}
+.info a:hover {
+  background-color: #181a1b;
+  color: whitesmoke;
+}
