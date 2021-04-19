@@ -8,6 +8,11 @@
 }
 li {
   list-style: none;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  align-items: center;
+  margin-right: 10px;
 }
 .showcase {
   width: 100%;
@@ -34,29 +39,32 @@ h1 {
   text-align: center;
 }
 
+/* buttons */
 .btns {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
 }
 button {
   text-transform: uppercase;
-  letter-spacing: 2px;
   font-size: 1.2rem;
   font-weight: 500;
   cursor: pointer;
   border: none;
-  background-color: slateblue;
-  padding: 10px;
-  border-radius: 5px;
+  background-color: whitesmoke;
+  color: slateblue;
+  border: slateblue 2px solid;
+  padding: 5px;
+  border-radius: 10px;
   margin: auto;
   transition: 0.4s;
 }
 button:hover {
-  background-color: #2a2e32;
+  letter-spacing: 2px;
+  background-color: slateblue;
   color: #fff;
 }
-
 .add-btn {
   position: absolute;
   bottom: 5px;
@@ -64,18 +72,10 @@ button:hover {
   font-size: 3rem;
   transform: translateX(-50%);
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.3s;
 }
 .add-btn:hover {
   color: green;
-}
-
-li {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  align-items: center;
-  margin-right: 10px;
 }
 
 input {
@@ -87,6 +87,7 @@ input {
   font-size: 1.5rem;
   background-color: whitesmoke;
 }
+/* icon styles */
 .fa-times {
   transition: 0.2s;
   cursor: pointer;
@@ -112,10 +113,39 @@ input {
 .fa-check-square:hover {
   color: orangered;
 }
-
+/* for adding li */
 .over {
   overflow: auto;
   height: 50%;
+  margin-bottom: 30px;
+}
+
+.info {
+  text-align: center;
+}
+.info span {
+  color: slateblue;
+}
+
+.error-message {
+  color: red;
+  font-weight: 500;
+}
+.fa-eye-slash {
+  cursor: pointer;
+  font-size: 1.4rem;
+  transition: 0.4s;
+}
+.fa-eye-slash:hover {
+  color: #4c6ef5;
+}
+.fa-eye {
+  cursor: pointer;
+  font-size: 1.4rem;
+  transition: 0.4s;
+}
+.fa-eye:hover {
+  color: #4c6ef5;
 }
 
 @media (max-width: 1200px) {

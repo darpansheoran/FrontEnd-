@@ -15,24 +15,37 @@
   </head>
   <body>
     <div class="showcase">
+      <!-- actual app starts here-->
       <div class="list">
         <h1>To Do List</h1>
         <div class="btns">
+          <i class="fas fa-eye-slash" title="View All Tasks"></i>
           <button id="tasks">Not Completed</button
           ><button id="completed">Completed</button>
         </div>
+        <!-- tasks -->
         <div class="over">
           <ul class="items">
             <li class="list-item not-completed">
               <i class="far fa-square"></i>
-              <input type="text" placeholder="Task goes here" />
+              <input
+                class="scroll-content"
+                type="text"
+                placeholder="Task goes here"
+              />
               <i class="fas fa-times"></i>
             </li>
           </ul>
         </div>
+        <div>
+          <p class="info">
+            <span>&#9135;&#9135;</span> Get Started <span>&#9135;&#9135;</span>
+          </p>
+        </div>
         <i class="far fa-plus-square add-btn"></i>
       </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
