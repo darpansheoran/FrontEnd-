@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Navbar</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+      integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <nav>
+      <header class="nav-header">
+        <h1>Coding <span>Addict</span></h1>
+        <ul class="btns">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+        <ul class="social">
+          <li><i class="fab fa-facebook"></i></li>
+          <li><i class="fab fa-twitter"></i></li>
+          <li><i class="fab fa-behance"></i></li>
+          <li><i class="fab fa-linkedin"></i></li>
+          <li><i class="fas fa-gem"></i></li>
+        </ul>
+        <div class="sidebar-btn"><i class="fas fa-bars"></i></div>
+      </header>
+      <div class="nav-menu">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Projects</a>
+        <a href="#">Contact</a>
+      </div>
+    </nav>
+    <section>
+      <h1>Decrease window size for collapsible menu.</h1>
+    </section>
+    <script>
+      var btn = document.querySelector(".sidebar-btn");
+      var navMenu = document.querySelector(".nav-menu");
+      btn.addEventListener("click", () => {
+        console.log(navMenu.style.maxHeight);
+        if (navMenu.style.maxHeight) {
+          navMenu.style.maxHeight = null;
+        } else {
+          navMenu.style.maxHeight = navMenu.scrollHeight + "px";
+        }
+      });
+    </script>
+  </body>
+</html>

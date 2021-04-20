@@ -20,6 +20,10 @@ remove.addEventListener(
     if (e.currentTarget.parentNode.classList.contains("not-completed")) {
       counter--;
     }
+    if (showBtn.classList.contains("fa-eye")) {
+      showBtn.classList.add("fa-eye-slash");
+      showBtn.click();
+    }
   },
   false
 );
@@ -75,7 +79,7 @@ square.addEventListener(
 
 // add new task
 add.addEventListener("click", () => {
-  if (list.children[0].children[1].value == "" && counter > 0) {
+  if (counter > 0 && list.children[0].children[1].value == "") {
     info.innerText = "Write Something in your to-do.";
     info.classList.add("error-message");
     setTimeout(() => {
@@ -102,6 +106,10 @@ add.addEventListener("click", () => {
         e.currentTarget.parentNode.remove();
         if (e.currentTarget.parentNode.classList.contains("not-completed")) {
           counter--;
+        }
+        if (showBtn.classList.contains("fa-eye")) {
+          showBtn.classList.add("fa-eye-slash");
+          showBtn.click();
         }
       },
       false
