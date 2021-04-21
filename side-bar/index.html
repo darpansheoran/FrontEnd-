@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sidebar</title>
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+      integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="showcase"><i class="fas fa-bars"></i></div>
+    <div class="side-menu">
+      <h1>Coding <span>Addict</span></h1>
+      <i class="fas fa-times"></i>
+      <div class="btns">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Projects</a>
+        <a href="#">Contact</a>
+      </div>
+      <ul class="social">
+        <li><i class="fab fa-facebook"></i></li>
+        <li><i class="fab fa-twitter"></i></li>
+        <li><i class="fab fa-behance"></i></li>
+        <li><i class="fab fa-linkedin"></i></li>
+        <li><i class="fas fa-gem"></i></li>
+      </ul>
+    </div>
+    <script>
+      var btn = document.querySelector(".fa-bars");
+      var menu = document.querySelector(".side-menu");
+      var closeBtn = document.querySelector(".fa-times");
+      btn.addEventListener("click", () => {
+        if (menu.style.left == "0px") {
+          menu.style.left = "-1000px";
+        } else {
+          menu.style.left = "0px";
+        }
+      });
+      closeBtn.addEventListener("click", () => {
+        menu.style.left = "-1000px";
+      });
+    </script>
+  </body>
+</html>
