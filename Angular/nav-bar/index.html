@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link href="style.css" rel="stylesheet" />
+    <title>Navbar</title>
+  </head>
+  <body ng-app ng-init="active='home'">
+    <nav class="{{active}}">
+      <a href="#" class="home" ng-click="active='home'">Home</a
+      ><a href="#" class="about" ng-click="active='about'">About</a
+      ><a href="#" class="contact" ng-click="active='contact'">Contact</a>
+    </nav>
+    <p>You chose <span>{{active}}</span></p>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
+  </body>
+</html>

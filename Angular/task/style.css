@@ -1,0 +1,92 @@
+html,
+body {
+  height: 100%;
+  text-align: center;
+}
+nav {
+  position: relative;
+}
+/* Center nav heading */
+nav h3 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.showcase {
+  position: relative;
+  width: 70%;
+  margin: auto;
+  min-height: 75vh;
+}
+/* Center showcase top-bar heading */
+.showcase nav h4 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.showcase .input-group,
+.showcase .table {
+  width: 95%;
+  margin: auto;
+}
+.showcase .table {
+  table-layout: fixed;
+  white-space: nowrap;
+}
+/* Column widths are based on these cells */
+.col-name {
+  width: 22%;
+}
+.col-email {
+  width: 35%;
+}
+.col-gender {
+  width: 10%;
+}
+.col-phone {
+  width: 25%;
+}
+.col-age {
+  width: 8%;
+}
+/* so that table does not overflows. also table-layout:fixed is faster*/
+.table td,
+.table th {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+footer {
+  border-top: 1px solid #000;
+  font-weight: 300;
+}
+
+/* media queries */
+@media (max-width: 986px) {
+  .showcase {
+    width: 85%;
+  }
+}
+@media (max-width: 700px) {
+  .showcase {
+    width: 95%;
+  }
+  /* hide table column */
+  .col-gender {
+    width: 0%;
+  }
+}
+@media (max-width: 640px) {
+  /* keep h3 centered */
+  nav h3 {
+    width: 100%;
+  }
+  /* hide table column */
+
+  .col-age {
+    width: 0%;
+  }
+}
