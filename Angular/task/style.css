@@ -5,6 +5,8 @@ body {
 }
 nav {
   position: relative;
+  background-color: #402c5d;
+  color: #f4f4f4;
 }
 /* Center nav heading */
 nav h3 {
@@ -31,11 +33,13 @@ nav h3 {
   width: 95%;
   margin: auto;
 }
+/* HERE */
+/* so that table does not overflows. also table-layout:fixed is faster*/
 .showcase .table {
   table-layout: fixed;
   white-space: nowrap;
 }
-/* Column widths are based on these cells */
+/* Set column widths */
 .col-name {
   width: 22%;
 }
@@ -51,10 +55,9 @@ nav h3 {
 .col-age {
   width: 8%;
 }
-/* so that table does not overflows. also table-layout:fixed is faster*/
+
 .table td,
 .table th {
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -65,28 +68,76 @@ footer {
 }
 
 /* media queries */
-@media (max-width: 986px) {
-  .showcase {
-    width: 85%;
-  }
-}
-@media (max-width: 700px) {
-  .showcase {
-    width: 95%;
-  }
-  /* hide table column */
-  .col-gender {
-    width: 0%;
-  }
-}
-@media (max-width: 640px) {
-  /* keep h3 centered */
+@media only screen and (max-width: 760px),
+  (min-device-width: 768px) and (max-device-width: 1024px) {
+  /* for navbar heading */
   nav h3 {
     width: 100%;
+    padding-left: 20px;
   }
-  /* hide table column */
+  .showcase {
+    width: 90%;
+  }
+  /* make table responsive for mobiles */
+  /* Zebra striping */
+  tr:nth-of-type(odd) {
+    background: rgb(224, 224, 224);
+  }
+  /* Force table to not be like tables anymore */
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+  /* Hide table headers (but not display: none;, for accessibility) */
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  tr {
+    border: 1px solid #ccc;
+  }
 
-  .col-age {
-    width: 0%;
+  td {
+    /* Behave  like a "row" */
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 30% !important;
+  }
+
+  td:before {
+    /* Now like a table header */
+    position: absolute;
+    font-weight: bold;
+    text-align: left;
+    /* Top/left values mimic padding */
+    top: 8px;
+    left: 8px;
+    width: 25%;
+    white-space: nowrap;
+  }
+  /*
+	Label the data
+	*/
+  td:nth-of-type(1):before {
+    content: "Name:";
+  }
+  td:nth-of-type(2):before {
+    content: "Email:";
+  }
+  td:nth-of-type(3):before {
+    content: "Phone:";
+  }
+  td:nth-of-type(4):before {
+    content: "Gender:";
+  }
+  td:nth-of-type(5):before {
+    content: "Age:";
   }
 }

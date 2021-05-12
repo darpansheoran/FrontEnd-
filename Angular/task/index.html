@@ -25,8 +25,8 @@
   </head>
   <body ng-app="myModule">
     <!-- top-bar(p=padding) -->
-    <nav class="nav" style="background-color: #402c5d; color: #f4f4f4">
-      <i class="fas fa-user-tag p-3" style="font-size: 1.5rem"></i>
+    <nav class="nav">
+      <i class="fas fa-user-tag p-3" style="font-size: 1.7rem"></i>
       <h3>User Management System</h3>
     </nav>
 
@@ -34,10 +34,7 @@
     <!-- my=margin-top&bottom py(same)-->
     <div ng-controller="myController" class="showcase my-4">
       <!-- showcase-topbar -->
-      <nav
-        class="nav py-2"
-        style="background-color: #402c5d; color: #f4f4f4; width: 100%"
-      >
+      <nav class="nav py-2">
         <!-- ps=padding-start -->
         <i class="fas fa-users ps-3" style="font-size: 1.5rem"></i>
         <h4>User Data List</h4>
@@ -45,36 +42,39 @@
       <!-- search based on any field in table -->
       <div class="input-group input-group-sm my-2">
         <input
-          type="text "
+          type="text"
           class="form-control"
-          aria-label="Sizing example input"
-          aria-describedby="inputGroup-sizing-sm"
+          aria-label="search input"
+          aria-describedby="search users"
           placeholder="Search"
           ng-model="searchText"
         />
       </div>
-      <table class="table table-hover table-bordered">
-        <thead>
-          <tr>
-            <th class="col-name">Name</th>
-            <th class="col-email">Email</th>
-            <th class="col-phone">Phone</th>
-            <th class="col-gender">Gender</th>
-            <th class="col-age">Age</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            ng-repeat="employee in employees | limitTo:5:startFrom | filter:searchText "
-          >
-            <td>{{employee.name}}</td>
-            <td>{{employee.email}}</td>
-            <td>{{employee.phone}}</td>
-            <td><i class="fas fa-{{employee.gender}}"></i></td>
-            <td>{{employee.age}}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th class="col-name">Name</th>
+              <th class="col-email">Email</th>
+              <th class="col-phone">Phone</th>
+              <th class="col-gender">Gender</th>
+              <th class="col-age">Age</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- needs working -->
+            <tr
+              ng-repeat="employee in employees | filter:searchText | limitTo:5:startFrom "
+            >
+              <td>{{employee.name}}</td>
+              <td>{{employee.email}}</td>
+              <td>{{employee.phone}}</td>
+              <td><i class="fas fa-{{employee.gender}}"></i></td>
+              <td>{{employee.age}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <!-- pagination -->
       <ul class="pagination d-flex justify-content-center mt-4">
         <li class="page-item disabled prev">
@@ -87,7 +87,7 @@
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
-        <li class="page-item active" ng-click="goToPage(1)">
+        <!-- <li class="page-item active" ng-click="goToPage(1)">
           <a class="page-link" href="#">1</a>
         </li>
         <li class="page-item" ng-click="goToPage(2)">
@@ -95,7 +95,19 @@
         </li>
         <li class="page-item" ng-click="goToPage(3)">
           <a class="page-link" href="#">3</a>
+        </li> -->
+        <!-- START HERE -->
+        <li class="page-item active" ng-click="goToPage(1)">
+          <a class="page-link" href="#">1</a>
         </li>
+        <li
+          ng-if="pages > 1"
+          class="page-item"
+          ng-repeat="page in [] | range:pages"
+        >
+          <a class="page-link" href="#" ng-click="goToPage(page)">{{page}}</a>
+        </li>
+        <!-- ENDS -->
         <li class="page-item next">
           <a
             class="page-link"
@@ -111,9 +123,9 @@
       <button
         id="model-btn"
         type="button"
-        class="btn btn-success"
+        class="btn btn-outline-primary my-2"
         data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
+        data-bs-target="#formModal"
       >
         Add new user
       </button>
@@ -121,17 +133,15 @@
       <!-- Modal -->
       <div
         class="modal fade"
-        id="exampleModal"
+        id="formModal"
         tabindex="-1"
-        aria-labelledby="exampleModalLabel"
+        aria-labelledby="userInputModal"
         aria-hidden="true"
       >
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
-                Enter your details
-              </h5>
+              <h5 class="modal-title" id="formModalLabel">Fill the form</h5>
               <button
                 type="button"
                 class="btn-close"
@@ -141,70 +151,98 @@
             </div>
             <div class="modal-body">
               <form class="needs-validation" novalidate>
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="basic-addon1">Name</span>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="validationCustom01"
-                    placeholder="Enter your name"
-                    aria-label="name"
-                    aria-describedby="basic-addon1"
-                    required
-                  />
-                </div>
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="basic-addon1">Email</span>
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="validationCustom02"
-                    placeholder="Enter your email"
-                    aria-label="email"
-                    aria-describedby="basic-addon1"
-                    required
-                  />
-                </div>
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="basic-addon1">Phone</span>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="validationCustom03"
-                    placeholder="Enter your phone number"
-                    aria-label="number"
-                    aria-describedby="basic-addon1"
-                    required
-                  />
-                </div>
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="basic-addon1">Gender</span>
-                  <select
-                    class="form-select"
-                    id="validationCustom04"
-                    required
-                    aria-label=".form-select example"
+                <!-- Name -->
+                <div class="mb-3 row">
+                  <label for="formControlInput1" class="col-sm-2 col-form-label"
+                    >Name:</label
                   >
-                    <option selected disabled value="">Select</option>
-                    <option value="male">male</option>
-                    <option value="female">female</option>
-                  </select>
+                  <div class="col-sm-10">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="validationCustom01"
+                      placeholder="John Doe"
+                      aria-label="name"
+                      aria-describedby="user-name"
+                      required
+                    />
+                  </div>
                 </div>
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="basic-addon1">Age</span>
-                  <input
-                    type="number"
-                    value="18"
-                    id="validationCustom05"
-                    required
-                    class="form-control"
-                    placeholder="Enter your age"
-                    aria-label="age"
-                    aria-describedby="basic-addon1"
-                  />
+                <!-- email -->
+                <div class="mb-3 row">
+                  <label for="formControlInput1" class="col-sm-2 col-form-label"
+                    >Email:</label
+                  >
+                  <div class="col-sm-10">
+                    <input
+                      type="email"
+                      class="form-control"
+                      placeholder="name@example.com"
+                      id="validationCustom02"
+                      aria-label="email"
+                      aria-describedby="user-email"
+                      required
+                    />
+                  </div>
                 </div>
+                <!-- phone -->
+                <div class="mb-3 row">
+                  <label for="formControlInput1" class="col-sm-2 col-form-label"
+                    >Phone:</label
+                  >
+                  <div class="col-sm-10">
+                    <input
+                      type="tel"
+                      pattern="[1-9]{1}[0-9]{9}"
+                      class="form-control"
+                      id="validationCustom03"
+                      placeholder="Enter your phone number"
+                      aria-label="number"
+                      aria-describedby="phone-number"
+                      required
+                    />
+                  </div>
+                </div>
+                <!-- gender -->
+                <div class="mb-3 row">
+                  <label for="formControlInput1" class="col-sm-2 col-form-label"
+                    >Gender:</label
+                  >
+                  <div class="col-sm-10">
+                    <select
+                      class="form-select"
+                      aria-label="select"
+                      id="validationCustom04"
+                      required
+                    >
+                      <option selected disabled value="">Select</option>
+                      <option value="male">male</option>
+                      <option value="female">female</option>
+                    </select>
+                  </div>
+                </div>
+                <!-- age -->
+                <div class="mb-3 row">
+                  <label for="formControlInput1" class="col-sm-2 col-form-label"
+                    >Age:</label
+                  >
+                  <div class="col-sm-10">
+                    <input
+                      type="number"
+                      min="1"
+                      max="100"
+                      id="validationCustom05"
+                      required
+                      class="form-control"
+                      placeholder="18"
+                      aria-label="age"
+                      aria-describedby="user-age"
+                    />
+                  </div>
+                </div>
+                <!-- submit button -->
                 <div class="input-group mb-3">
-                  <button type="submit" class="btn btn-success mx-auto">
+                  <button type="submit" class="btn btn-outline-success mx-auto">
                     Submit
                   </button>
                 </div>
@@ -212,6 +250,35 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- success message -->
+      <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+          <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+          />
+        </symbol>
+      </svg>
+      <div
+        class="
+          alert alert-success alert-dismissible
+          d-flex
+          justify-content-center
+          fade
+        "
+        role="alert"
+      >
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24">
+          <use xlink:href="#check-circle-fill" />
+        </svg>
+        <div><strong>New User Added</strong></div>
+        <button
+          type="button"
+          class="btn-close alert-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
       </div>
     </div>
 

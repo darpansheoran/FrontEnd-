@@ -102,6 +102,48 @@ var myApp = angular
         gender: "male",
         age: 31,
       },
+      {
+        name: "Andy",
+        email: "ndy@hotmail.com",
+        phone: 4789453698,
+        gender: "male",
+        age: 31,
+      },
+      {
+        name: "Andy",
+        email: "ndy@hotmail.com",
+        phone: 4789453698,
+        gender: "male",
+        age: 31,
+      },
+      {
+        name: "Andy",
+        email: "ndy@hotmail.com",
+        phone: 4789453698,
+        gender: "male",
+        age: 31,
+      },
+      {
+        name: "Andy",
+        email: "ndy@hotmail.com",
+        phone: 4789453698,
+        gender: "male",
+        age: 31,
+      },
+      {
+        name: "Andy",
+        email: "ndy@hotmail.com",
+        phone: 4789453698,
+        gender: "male",
+        age: 31,
+      },
+      {
+        name: "Andy",
+        email: "ndy@hotmail.com",
+        phone: 4789453698,
+        gender: "male",
+        age: 31,
+      },
     ];
     // link scope variable with array of employees
     $scope.employees = employees;
@@ -109,7 +151,8 @@ var myApp = angular
     $scope.counter = 1;
     // index for showing limited records
     $scope.startFrom = 0;
-    // calculate number of pages => Math.ceil(employees.length / 5);
+    // calculate number of pages
+    $scope.pages = Math.ceil(employees.length / 5);
 
     $scope.nextClick = function () {
       $scope.counter = $scope.counter + 1;
@@ -173,7 +216,6 @@ var myApp = angular
     // form-validation
     (function () {
       "use strict";
-
       // Fetch the form we want to apply custom Bootstrap validation styles to
       var form = document.querySelector(".needs-validation");
       form.addEventListener(
@@ -182,8 +224,7 @@ var myApp = angular
           if (!form.checkValidity()) {
             event.preventDefault();
             event.stopPropagation();
-          }
-          if (form.checkValidity()) {
+          } else {
             employees.unshift({
               name: document.getElementById("validationCustom01").value,
               email: document.getElementById("validationCustom02").value,
@@ -191,10 +232,34 @@ var myApp = angular
               gender: document.getElementById("validationCustom04").value,
               age: document.getElementById("validationCustom05").value,
             });
+            // check if new page needed
+            $scope.pages = Math.ceil(employees.length / 5);
+            // reset form
+            form.reset();
+            // reset form-styles
+            form.classList.remove("was-validated");
+            // close modal & Show success message
+            document.querySelector(".btn-close").click();
+            document.querySelector(".alert-success").classList.toggle("fade");
+            setTimeout(function () {
+              document.querySelector(".alert-success").classList.add("fade");
+            }, 2000);
+            return;
           }
           form.classList.add("was-validated");
         },
         false
       );
     })();
+  })
+  .filter("range", function () {
+    return function (input, total) {
+      total = parseInt(total);
+
+      for (var i = 2; i <= total; i++) {
+        input.push(i);
+      }
+
+      return input;
+    };
   });
