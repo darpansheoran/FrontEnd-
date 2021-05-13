@@ -1,0 +1,9 @@
+// variables
+$primary: #402c5d;
+$secondary: #f4f4f4;
+$border-radius: 0;
+$border-radius-sm: 0;
+
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+// css file
+@import "style";

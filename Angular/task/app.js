@@ -109,84 +109,62 @@ var myApp = angular
         gender: "male",
         age: 31,
       },
-      {
-        name: "Andy",
-        email: "ndy@hotmail.com",
-        phone: 4789453698,
-        gender: "male",
-        age: 31,
-      },
-      {
-        name: "Andy",
-        email: "ndy@hotmail.com",
-        phone: 4789453698,
-        gender: "male",
-        age: 31,
-      },
-      {
-        name: "Andy",
-        email: "ndy@hotmail.com",
-        phone: 4789453698,
-        gender: "male",
-        age: 31,
-      },
-      {
-        name: "Andy",
-        email: "ndy@hotmail.com",
-        phone: 4789453698,
-        gender: "male",
-        age: 31,
-      },
-      {
-        name: "Andy",
-        email: "ndy@hotmail.com",
-        phone: 4789453698,
-        gender: "male",
-        age: 31,
-      },
     ];
     // link scope variable with array of employees
     $scope.employees = employees;
-    // counter for pagination
-    $scope.counter = 1;
-    // index for showing limited records
+    // create another array to store search results afterwards
+    $scope.filteredEmployees = employees;
+    // to check and disable prev and next buttons
+    $scope.onPage = 1;
+    // index for showing limited records; for each iteration increase by 5 for next page
     $scope.startFrom = 0;
-    // calculate number of pages
+    // initial number of pages
     $scope.pages = Math.ceil(employees.length / 5);
 
+    // calculate number of pages
+    $scope.calcPages = function (results) {
+      $scope.pages = Math.ceil(results / 5);
+      return $scope.pages;
+    };
+
     $scope.nextClick = function () {
-      $scope.counter = $scope.counter + 1;
-      if ($scope.counter == Math.ceil(employees.length / 5)) {
+      $scope.onPage = $scope.onPage + 1;
+      // if on last page disable next
+      if ($scope.onPage == $scope.pages) {
         document.querySelector(".next").classList.add("disabled");
         document.querySelector(".prev").classList.remove("disabled");
-      } else if ($scope.counter == 1) {
-        document.querySelector(".prev").classList.add("disabled");
-        document.querySelector(".next").classList.remove("disabled");
-      } else {
+      }
+      // else remove disabled class
+      else {
         document.querySelector(".prev").classList.remove("disabled");
         document.querySelector(".next").classList.remove("disabled");
       }
-      // for showing selected li
+      // add active class to current link and remove from previous
       document
         .querySelector(".active")
         .nextElementSibling.classList.add("active");
       document.querySelector(".active").classList.remove("active");
       // show data by increasing index
       $scope.startFrom += 5;
+      // disable search if needed
+      let input = document.querySelector(".input-group").firstElementChild;
+      if ($scope.onPage != 1) {
+        input.disabled = true;
+      } else {
+        input.disabled = false;
+      }
     };
     $scope.prevClick = function () {
-      $scope.counter = $scope.counter - 1;
-      if ($scope.counter == Math.ceil(employees.length / 5)) {
-        document.querySelector(".next").classList.add("disabled");
-        document.querySelector(".prev").classList.remove("disabled");
-      } else if ($scope.counter == 1) {
+      $scope.onPage = $scope.onPage - 1;
+      // if on first page disable previous button
+      if ($scope.onPage == 1) {
         document.querySelector(".prev").classList.add("disabled");
         document.querySelector(".next").classList.remove("disabled");
       } else {
         document.querySelector(".prev").classList.remove("disabled");
         document.querySelector(".next").classList.remove("disabled");
       }
-      // for showing selected li
+      // for showing selected li and remove active from previous
       document
         .querySelector(".active")
         .previousElementSibling.classList.add("active");
@@ -195,13 +173,20 @@ var myApp = angular
         .nextElementSibling.classList.remove("active");
       // show data by decreasing index
       $scope.startFrom -= 5;
+      // disable search if needed
+      let input = document.querySelector(".input-group").firstElementChild;
+      if ($scope.onPage != 1) {
+        input.disabled = true;
+      } else {
+        input.disabled = false;
+      }
     };
     $scope.goToPage = function (index) {
-      $scope.counter = index;
-      if ($scope.counter == Math.ceil(employees.length / 5)) {
+      $scope.onPage = index;
+      if ($scope.onPage == $scope.pages) {
         document.querySelector(".next").classList.add("disabled");
         document.querySelector(".prev").classList.remove("disabled");
-      } else if ($scope.counter == 1) {
+      } else if ($scope.onPage == 1) {
         document.querySelector(".prev").classList.add("disabled");
         document.querySelector(".next").classList.remove("disabled");
       } else {
@@ -210,7 +195,24 @@ var myApp = angular
       }
       document.querySelector(".active").classList.remove("active");
       event.target.parentElement.classList.add("active");
+      // show content of that page
       $scope.startFrom = (index - 1) * 5;
+      // disable search if needed
+      let input = document.querySelector(".input-group").firstElementChild;
+      if ($scope.onPage != 1) {
+        input.disabled = true;
+      } else {
+        input.disabled = false;
+      }
+    };
+
+    // reset form when it is closed
+    $scope.resetForm = function () {
+      var form = document.querySelector(".needs-validation");
+      // reset form
+      form.reset();
+      // reset form-styles
+      form.classList.remove("was-validated");
     };
 
     // form-validation
@@ -232,18 +234,21 @@ var myApp = angular
               gender: document.getElementById("validationCustom04").value,
               age: document.getElementById("validationCustom05").value,
             });
-            // check if new page needed
-            $scope.pages = Math.ceil(employees.length / 5);
+            // if new page enable next
+            $scope.pages = Math.ceil($scope.filteredEmployees / 5);
+            if ($scope.onPage != $scope.pages) {
+              document.querySelector(".next").classList.remove("disabled");
+            }
             // reset form
             form.reset();
             // reset form-styles
             form.classList.remove("was-validated");
             // close modal & Show success message
             document.querySelector(".btn-close").click();
-            document.querySelector(".alert-success").classList.toggle("fade");
+            document.querySelector(".alert").classList.toggle("fade");
             setTimeout(function () {
-              document.querySelector(".alert-success").classList.add("fade");
-            }, 2000);
+              document.querySelector(".alert").classList.add("fade");
+            }, 3000);
             return;
           }
           form.classList.add("was-validated");
@@ -253,9 +258,9 @@ var myApp = angular
     })();
   })
   .filter("range", function () {
+    // RETURNS ARRAY FOR RANGE IN NG-REPEAT
     return function (input, total) {
       total = parseInt(total);
-
       for (var i = 2; i <= total; i++) {
         input.push(i);
       }
