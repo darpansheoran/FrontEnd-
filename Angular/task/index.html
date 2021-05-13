@@ -5,16 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Management System</title>
-    <!-- Bootstrap -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
-      crossorigin="anonymous"
-    />
-
     <!-- css -->
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="css/main.css" />
     <!-- font-awesome -->
     <link
       rel="stylesheet"
@@ -39,7 +31,8 @@
         <i class="fas fa-users ps-3" style="font-size: 1.5rem"></i>
         <h4>User Data List</h4>
       </nav>
-      <!-- search based on any field in table -->
+
+      <!-- search user and add user -->
       <div class="input-group input-group-sm my-2">
         <input
           type="text"
@@ -49,7 +42,18 @@
           placeholder="Search"
           ng-model="searchText"
         />
+        <!-- Button trigger modal -->
+        <button
+          id="model-btn"
+          type="button"
+          class="btn btn-outline-primary ms-2"
+          data-bs-toggle="modal"
+          data-bs-target="#formModal"
+        >
+          Add user
+        </button>
       </div>
+
       <div class="table-responsive">
         <table class="table table-hover table-bordered">
           <thead>
@@ -62,9 +66,9 @@
             </tr>
           </thead>
           <tbody>
-            <!-- needs working -->
+            <!-- filteredEmployees array contains search results and startFrom is for pagination  -->
             <tr
-              ng-repeat="employee in employees | filter:searchText | limitTo:5:startFrom "
+              ng-repeat="employee in filteredEmployees = (employees | filter:searchText)  | limitTo:5:startFrom"
             >
               <td>{{employee.name}}</td>
               <td>{{employee.email}}</td>
@@ -76,7 +80,11 @@
         </table>
       </div>
       <!-- pagination -->
-      <ul class="pagination d-flex justify-content-center mt-4">
+      <ul
+        ng-if="calcPages(filteredEmployees.length) > 1"
+        class="pagination d-flex justify-content-center mt-4"
+      >
+        <!-- previous  button -->
         <li class="page-item disabled prev">
           <a
             class="page-link"
@@ -87,27 +95,18 @@
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
-        <!-- <li class="page-item active" ng-click="goToPage(1)">
-          <a class="page-link" href="#">1</a>
-        </li>
-        <li class="page-item" ng-click="goToPage(2)">
-          <a class="page-link" href="#">2</a>
-        </li>
-        <li class="page-item" ng-click="goToPage(3)">
-          <a class="page-link" href="#">3</a>
-        </li> -->
-        <!-- START HERE -->
+        <!-- First link will be active -->
         <li class="page-item active" ng-click="goToPage(1)">
           <a class="page-link" href="#">1</a>
         </li>
+        <!-- other links;calc pages and create using ng-repeat -->
         <li
-          ng-if="pages > 1"
           class="page-item"
-          ng-repeat="page in [] | range:pages"
+          ng-repeat="page in [] | range:calcPages(filteredEmployees.length)"
         >
           <a class="page-link" href="#" ng-click="goToPage(page)">{{page}}</a>
         </li>
-        <!-- ENDS -->
+        <!-- next button -->
         <li class="page-item next">
           <a
             class="page-link"
@@ -119,17 +118,6 @@
           </a>
         </li>
       </ul>
-      <!-- Button trigger modal -->
-      <button
-        id="model-btn"
-        type="button"
-        class="btn btn-outline-primary my-2"
-        data-bs-toggle="modal"
-        data-bs-target="#formModal"
-      >
-        Add new user
-      </button>
-
       <!-- Modal -->
       <div
         class="modal fade"
@@ -140,13 +128,14 @@
       >
         <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header text-dark bg-secondary">
               <h5 class="modal-title" id="formModalLabel">Fill the form</h5>
               <button
                 type="button"
                 class="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+                ng-click="resetForm()"
               ></button>
             </div>
             <div class="modal-body">
@@ -260,25 +249,11 @@
           />
         </symbol>
       </svg>
-      <div
-        class="
-          alert alert-success alert-dismissible
-          d-flex
-          justify-content-center
-          fade
-        "
-        role="alert"
-      >
-        <svg class="bi flex-shrink-0 me-2" width="24" height="24">
+      <div class="alert alert-primary d-flex fade p-2" role="alert">
+        <svg class="bi flex-shrink-0 me-3" width="24" height="24">
           <use xlink:href="#check-circle-fill" />
         </svg>
         <div><strong>New User Added</strong></div>
-        <button
-          type="button"
-          class="btn-close alert-close"
-          data-bs-dismiss="alert"
-          aria-label="Close"
-        ></button>
       </div>
     </div>
 
@@ -291,10 +266,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
     <script src="app.js"></script>
     <!-- Bootstrap -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Bootstrap cdn -->
+    <!-- <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"
+      integrity="sha384-lpyLfhYuitXl2zRZ5Bn2fqnhNAKOAaM/0Kr9laMspuaMiZfGmfwRNFh8HlMy49eQ"
       crossorigin="anonymous"
-    ></script>
+    ></script> -->
   </body>
 </html>
