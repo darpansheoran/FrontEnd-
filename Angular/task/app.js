@@ -235,7 +235,7 @@ var myApp = angular
               age: document.getElementById("validationCustom05").value,
             });
             // if new page enable next
-            $scope.pages = Math.ceil($scope.filteredEmployees / 5);
+            $scope.pages = Math.ceil($scope.filteredEmployees.length / 5);
             if ($scope.onPage != $scope.pages) {
               document.querySelector(".next").classList.remove("disabled");
             }
