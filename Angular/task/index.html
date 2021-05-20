@@ -18,28 +18,26 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
   </head>
   <body ng-app="myModule">
-    <!-- top-bar(p=padding) -->
-    <nav class="nav">
-      <i class="fas fa-user-tag p-3" style="font-size: 1.7rem"></i>
-      <h3>User Management System</h3>
+    <!-- top-bar -->
+    <nav class="nav bg-primary text-light position-relative">
+      <i class="fas fa-user-tag ps-3 pt-2 pb-3 fs-3"></i>
+      <h3 class="position-absolute w-100 pt-2">User Management System</h3>
     </nav>
 
     <!-- showcase -->
-    <!-- my=margin-top&bottom py(same)-->
-    <div ng-controller="myController" class="showcase my-4">
+    <div ng-controller="myController" class="showcase pt-5 w-75 mx-auto">
       <!-- showcase-topbar -->
-      <nav class="nav py-2">
-        <!-- ps=padding-start -->
-        <i class="fas fa-users ps-3" style="font-size: 1.5rem"></i>
-        <h4>User Data List</h4>
+      <nav class="nav bg-primary text-light position-relative">
+        <i class="fas fa-users p-2 fs-4"></i>
+        <h4 class="position-absolute w-100 pt-1">User Data List</h4>
       </nav>
 
       <!-- search user and add user -->
-      <div class="input-group input-group-sm my-2">
+      <div class="input-group input-group-sm my-2 px-3">
         <input
           type="text"
           class="form-control"
-          aria-label="search input"
+          aria-label="Search"
           aria-describedby="search users"
           placeholder="Search"
           ng-model="searchText"
@@ -56,7 +54,7 @@
         </button>
       </div>
 
-      <div class="table-responsive">
+      <div class="table-responsive px-3">
         <table class="table table-hover table-bordered">
           <thead>
             <tr>
@@ -70,6 +68,9 @@
           <tbody>
             <!-- filteredEmployees array contains search results and startFrom is for pagination  -->
             <tr
+              ng-click="setIndex($index)"
+              data-bs-toggle="modal"
+              data-bs-target="#completeDetails"
               ng-repeat="employee in filteredEmployees = (employees | filter:searchText)  | limitTo:5:startFrom"
             >
               <td>{{employee.name}}</td>
@@ -120,7 +121,7 @@
           </a>
         </li>
       </ul>
-      <!-- Modal -->
+      <!-- Modal for form -->
       <div
         class="modal fade"
         id="formModal"
@@ -128,9 +129,9 @@
         aria-labelledby="userInputModal"
         aria-hidden="true"
       >
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
           <div class="modal-content">
-            <div class="modal-header text-dark bg-secondary">
+            <div class="modal-header">
               <h5 class="modal-title" id="formModalLabel">Fill the form</h5>
               <button
                 type="button"
@@ -141,109 +142,243 @@
               ></button>
             </div>
             <div class="modal-body">
-              <form class="needs-validation" novalidate>
-                <!-- Name -->
-                <div class="mb-3 row">
-                  <label for="formControlInput1" class="col-sm-2 col-form-label"
-                    >Name:</label
-                  >
-                  <div class="col-sm-10">
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="validationCustom01"
-                      placeholder="John Doe"
-                      aria-label="name"
-                      aria-describedby="user-name"
-                      required
-                    />
-                    <div class="invalid-feedback">
-                      Please provide your name.
-                    </div>
-                  </div>
+              <!-- form -->
+              <form class="row g-1 needs-validation" novalidate>
+                <!-- name -->
+                <div class="col-md-4">
+                  <label for="username" class="form-label">Name:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="username"
+                    placeholder="John Doe"
+                    aria-label="name"
+                    aria-describedby="Username"
+                    required
+                  />
+                  <div class="invalid-feedback">Please provide your name.</div>
                 </div>
                 <!-- email -->
-                <div class="mb-3 row">
-                  <label for="formControlInput1" class="col-sm-2 col-form-label"
-                    >Email:</label
+                <div class="col-md-5">
+                  <label for="userEmail" class="form-label">Email:</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    placeholder="name@example.com"
+                    id="userEmail"
+                    aria-label="email"
+                    aria-describedby="UserEmail"
+                    required
+                  />
+                  <div class="invalid-feedback">Provide a valid email.</div>
+                </div>
+                <!-- gender -->
+                <div class="col-md-3">
+                  <label for="userGender" class="form-label">Gender:</label>
+                  <select
+                    class="form-select"
+                    aria-label="select"
+                    id="userGender"
+                    required
                   >
-                  <div class="col-sm-10">
-                    <input
-                      type="email"
-                      class="form-control"
-                      placeholder="name@example.com"
-                      id="validationCustom02"
-                      aria-label="email"
-                      aria-describedby="user-email"
-                      required
-                    />
-                    <div class="invalid-feedback">
-                      Please provide a valid email.
-                    </div>
+                    <option selected disabled value="">Select</option>
+                    <option value="male">male</option>
+                    <option value="female">female</option>
+                  </select>
+                  <div class="invalid-feedback">Select your gender.</div>
+                </div>
+                <!-- address -->
+                <div class="col-md-12">
+                  <label for="userAddress" class="form-label">Address:</label>
+                  <textarea
+                    class="form-control"
+                    id="userAddress"
+                    placeholder="1234 Main St"
+                    required
+                  ></textarea>
+                  <div class="invalid-feedback">
+                    Please provide your address.
                   </div>
                 </div>
                 <!-- phone -->
-                <div class="mb-3 row">
-                  <label for="formControlInput1" class="col-sm-2 col-form-label"
-                    >Phone:</label
-                  >
-                  <div class="col-sm-10">
-                    <input
-                      type="tel"
-                      pattern="[1-9]{1}[0-9]{9}"
-                      class="form-control"
-                      id="validationCustom03"
-                      placeholder="Enter your phone number"
-                      aria-label="number"
-                      aria-describedby="phone-number"
-                      required
-                    />
-                    <div class="invalid-feedback">
-                      Please provide a valid Phone no..
+                <div class="col-md-5">
+                  <label for="userPhone" class="form-label">Phone:</label>
+                  <input
+                    type="tel"
+                    pattern="[1-9]{1}[0-9]{9}"
+                    class="form-control"
+                    id="userPhone"
+                    placeholder="Phone number"
+                    aria-label="number"
+                    aria-describedby="PhoneNumber"
+                    required
+                  />
+                  <div class="invalid-feedback">Provide a valid Phone no.</div>
+                </div>
+                <!-- dob -->
+                <div class="col-md-4">
+                  <label for="dob" class="form-label">Dob:</label>
+                  <input
+                    id="dob"
+                    type="date"
+                    class="form-control"
+                    ng-model="age"
+                    aria-label="dob"
+                    aria-describedby="dob"
+                    required
+                  />
+                  <div class="invalid-feedback">Select your birthday.</div>
+                </div>
+                <!-- age -->
+                <div class="col-md-3">
+                  <label for="userAge" class="form-label">Age:</label>
+                  <input
+                    type="text"
+                    disabled
+                    value="{{calcAge()}}"
+                    class="form-control"
+                    id="userAge"
+                  />
+                </div>
+                <!-- Qualifications -->
+                <!--  Heading -->
+                <div
+                  class="
+                    col-md-12
+                    mt-3
+                    py-2
+                    text-center
+                    border-top border-muted
+                  "
+                >
+                  <h5>Education & Qualification</h5>
+                </div>
+                <!-- Labels -->
+                <div class="col-md-12" style="text-align: center">
+                  <div class="row g-1">
+                    <div class="col-md-2">Education</div>
+                    <div class="col-md-2">Institute</div>
+                    <div class="col-md-2">Start Date</div>
+                    <div class="col-md-2">End Date</div>
+                    <div class="col-md-2">%/CGPA</div>
+                    <div class="col-md-2">Action</div>
+                  </div>
+                </div>
+                <!-- Input -->
+                <div class="col-md-12 py-2">
+                  <div class="row g-1">
+                    <!-- education -->
+                    <div class="col-md-2">
+                      <select
+                        class="form-select no-validate"
+                        aria-label="education"
+                        id="education"
+                      >
+                        <option selected disabled value="">Select</option>
+                        <option value="Phd">Phd.</option>
+                        <option value="Post Graduation">Post Graduation</option>
+                        <option value="Bachelor's degree">
+                          Bachelor's degree
+                        </option>
+                        <option value="Diploma">Diploma</option>
+                        <option value="High school">High school</option>
+                      </select>
+                    </div>
+                    <!-- institute -->
+                    <div class="col-md-2">
+                      <input
+                        type="text"
+                        class="form-control no-validate"
+                        id="institute"
+                      />
+                    </div>
+                    <!-- Start Date -->
+                    <div class="col-md-2">
+                      <input
+                        type="text"
+                        placeholder="MM-dd-yyyy"
+                        class="form-control no-validate"
+                        id="startDate"
+                      />
+                    </div>
+                    <!-- End Date -->
+                    <div class="col-md-2">
+                      <input
+                        type="text"
+                        placeholder="MM-dd-yyyy"
+                        class="form-control no-validate"
+                        id="endDate"
+                      />
+                    </div>
+                    <!-- marks -->
+                    <div class="col-md-2">
+                      <input
+                        type="text"
+                        class="form-control no-validate"
+                        id="marks"
+                      />
+                    </div>
+                    <!-- buttons -->
+                    <div class="col-md-2">
+                      <div
+                        class="d-flex justify-content-center align-items-center"
+                      >
+                        <i
+                          ng-click="incRow()"
+                          class="fas fa-plus-square p-1"
+                          style="color: slateblue"
+                        ></i>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <!-- gender -->
-                <div class="mb-3 row">
-                  <label for="formControlInput1" class="col-sm-2 col-form-label"
-                    >Gender:</label
-                  >
-                  <div class="col-sm-10">
-                    <select
-                      class="form-select"
-                      aria-label="select"
-                      id="validationCustom04"
-                      required
-                    >
-                      <option selected disabled value="">Select</option>
-                      <option value="male">male</option>
-                      <option value="female">female</option>
-                    </select>
-                    <div class="invalid-feedback">Select your gender.</div>
+                <!-- list of qualifications -->
+                <div class="col-md-12 py-2" ng-repeat="degree in degrees">
+                  <div class="row g-1">
+                    <!-- education -->
+                    <div class="col-md-2">
+                      <p>{{degree.education}}</p>
+                    </div>
+                    <!-- institute -->
+                    <div class="col-md-2">
+                      <p>{{degree.institute}}</p>
+                    </div>
+                    <!-- Start Date -->
+                    <div class="col-md-2">
+                      <p>{{degree.startDate}}</p>
+                    </div>
+                    <!-- End Date -->
+                    <div class="col-md-2">
+                      <p>{{degree.endDate}}</p>
+                    </div>
+                    <!-- marks -->
+                    <div class="col-md-2">
+                      <p>{{degree.marks}}</p>
+                    </div>
+                    <!-- buttons -->
+                    <div class="col-md-2">
+                      <div
+                        class="d-flex justify-content-center align-items-center"
+                      >
+                        <i
+                          ng-click="delRow($index)"
+                          class="fas fa-trash p-1"
+                          style="color: red"
+                        ></i>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <!-- age -->
-                <div class="mb-3 row">
-                  <label for="formControlInput1" class="col-sm-2 col-form-label"
-                    >Age:</label
-                  >
-                  <div class="col-sm-10">
-                    <input
-                      type="number"
-                      min="1"
-                      max="100"
-                      id="validationCustom05"
-                      required
-                      class="form-control"
-                      placeholder="18"
-                      aria-label="age"
-                      aria-describedby="user-age"
-                    />
-                    <div class="invalid-feedback">Please provide your age.</div>
-                  </div>
+                <!-- error message -->
+                <div
+                  id="error"
+                  class="col-md-12"
+                  style="text-align: center; color: red; display: none"
+                >
+                  Please fill all the fields
                 </div>
-                <!-- submit button -->
-                <div class="input-group mb-3">
+                <!-- submit -->
+                <div class="input-group col-12 mt-3 py-2">
                   <button type="submit" class="btn btn-outline-success mx-auto">
                     Submit
                   </button>
@@ -253,31 +388,143 @@
           </div>
         </div>
       </div>
+      <!-- Modal for user details -->
+      <div
+        class="modal fade"
+        id="completeDetails"
+        tabindex="-1"
+        aria-labelledby="userDetails"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Complete user data</h4>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div
+                id="carousel"
+                class="carousel slide"
+                data-bs-ride="carousel"
+                data-bs-interval="false"
+              >
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <h5>Personal Details</h5>
+                    <div class="my-2 row g-1 text-start">
+                      <!-- name -->
+                      <div class="col-md-6">
+                        <p>
+                          <span class="fw-bolder">Name:</span>
+                          {{filteredEmployees[idx].name}}
+                        </p>
+                      </div>
+                      <!-- gender -->
+                      <div class="col-md-6">
+                        <p>
+                          <span class="fw-bolder">Gender:</span>
+                          {{filteredEmployees[idx].gender}}
+                        </p>
+                      </div>
+                      <!-- email -->
+                      <div class="col-md-12">
+                        <p>Email: {{filteredEmployees[idx].email}}</p>
+                      </div>
+                      <!-- address -->
+                      <div class="col-md-6">
+                        <p>Address: {{filteredEmployees[idx].address}}</p>
+                      </div>
+                      <!-- phone -->
+                      <div class="col-md-6">
+                        <p>Phone: {{filteredEmployees[idx].phone}}</p>
+                      </div>
+                      <!-- dob -->
+                      <div class="col-md-6">
+                        <p>Dob: {{filteredEmployees[idx].dob}}</p>
+                      </div>
+                      <!-- age -->
+                      <div class="col-md-6">
+                        <p>Age: {{filteredEmployees[idx].age}}</p>
+                      </div>
+                    </div>
+                    <button
+                      class="btn-outline-primary"
+                      type="button"
+                      data-bs-target="#carousel"
+                      data-bs-slide-to="1"
+                      aria-label="Slide 2"
+                    >
+                      Next
+                    </button>
+                  </div>
+                  <div class="carousel-item">
+                    <h5>Education & Qualification</h5>
+                    <button
+                      class="btn-outline-primary"
+                      type="button"
+                      data-bs-target="#carousel"
+                      data-bs-slide-to="0"
+                      class="active"
+                      aria-current="true"
+                      aria-label="Slide 1"
+                    >
+                      Previous
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- success message -->
       <div
-        class="alert alert-primary d-flex justify-content-center fade p-2 mt-2"
+        class="
+          alert alert-primary
+          fade
+          d-flex
+          justify-content-center
+          p-2
+          mt-2
+          w-75
+          mx-auto
+        "
         role="alert"
-        style="width: 60%"
       >
         <div><strong>New User Added</strong></div>
       </div>
     </div>
 
-    <!-- footer(px=padding-left&right) -->
-    <footer class="d-flex justify-content-between align-items-center px-4">
+    <!-- footer -->
+    <footer
+      class="
+        d-flex
+        justify-content-between
+        align-items-center
+        px-4
+        border-top border-dark
+        text-secondary
+      "
+    >
       <p>&copy;Patientbond 2021</p>
       <img src="img/PB_LOGO_041718_Small.svg" alt="logo" style="height: 58px" />
     </footer>
 
     <script src="app.js"></script>
-    <!-- Bootstrap -->
-    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Bootstrap javascript local -->
+    <!-- <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script> -->
     <!-- Bootstrap cdn -->
-    <!-- <script
+    <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"
       integrity="sha384-lpyLfhYuitXl2zRZ5Bn2fqnhNAKOAaM/0Kr9laMspuaMiZfGmfwRNFh8HlMy49eQ"
       crossorigin="anonymous"
-    ></script> -->
+    ></script>
   </body>
 </html>

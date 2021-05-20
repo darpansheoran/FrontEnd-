@@ -102,27 +102,59 @@ var myApp = angular
         gender: "male",
         age: 31,
       },
-      {
-        name: "Andy",
-        email: "ndy@hotmail.com",
-        phone: 4789453698,
-        gender: "male",
-        age: 31,
-      },
     ];
     // link scope variable with array of employees
     $scope.employees = employees;
-    // create another array to store search results afterwards
-    $scope.filteredEmployees = employees;
+
+    $scope.idx = 0;
+    $scope.setIndex = function (index) {
+      $scope.idx = index;
+      console.log($scope.idx);
+    };
+
     // to check and disable prev and next buttons
     $scope.onPage = 1;
-    // index for showing limited records; for each iteration increase by 5 for next page
+    // index for showing limited records; for each page iteration increase by 5 for next page
     $scope.startFrom = 0;
-    // initial number of pages
+    // calculate pages initially
     $scope.pages = Math.ceil(employees.length / 5);
+
+    // Qualifications
+    $scope.degrees = [];
+    $scope.incRow = function () {
+      if (
+        document.getElementById("education").value == "" ||
+        document.getElementById("institute").value == "" ||
+        document.getElementById("startDate").value == "" ||
+        document.getElementById("endDate").value == "" ||
+        document.getElementById("marks").value == ""
+      ) {
+        document.getElementById("error").style.display = "block";
+        setTimeout(function () {
+          document.getElementById("error").style.display = "none";
+        }, 2000);
+      } else {
+        $scope.degrees.unshift({
+          education: document.getElementById("education").value,
+          institute: document.getElementById("institute").value,
+          startDate: document.getElementById("startDate").value,
+          endDate: document.getElementById("endDate").value,
+          marks: document.getElementById("marks").value,
+        });
+        document.getElementById("education").value = "";
+        document.getElementById("institute").value = "";
+        document.getElementById("startDate").value = "";
+        document.getElementById("endDate").value = "";
+        document.getElementById("marks").value = "";
+      }
+    };
+    $scope.delRow = function (index) {
+      $scope.degrees.splice(index, 1);
+    };
 
     // calculate number of pages
     $scope.calcPages = function (results) {
+      // update pages
       $scope.pages = Math.ceil(results / 5);
       return $scope.pages;
     };
@@ -213,6 +245,17 @@ var myApp = angular
       form.reset();
       // reset form-styles
       form.classList.remove("was-validated");
+      // qualifications
+      $scope.degrees = [];
+    };
+
+    // calculate age
+    $scope.age = new Date();
+    $scope.calcAge = function () {
+      var Bday = +new Date($scope.age);
+      var usrAge = ~~((Date.now() - Bday) / 31557600000);
+      if (usrAge == 0) usrAge = 1;
+      return usrAge;
     };
 
     // form-validation
@@ -228,14 +271,17 @@ var myApp = angular
             event.stopPropagation();
           } else {
             employees.unshift({
-              name: document.getElementById("validationCustom01").value,
-              email: document.getElementById("validationCustom02").value,
-              phone: document.getElementById("validationCustom03").value,
-              gender: document.getElementById("validationCustom04").value,
-              age: document.getElementById("validationCustom05").value,
+              name: document.getElementById("username").value,
+              email: document.getElementById("userEmail").value,
+              phone: document.getElementById("userPhone").value,
+              gender: document.getElementById("userGender").value,
+              age: document.getElementById("userAge").value,
+              address: document.getElementById("userAddress").value,
+              dob: document.getElementById("dob").value,
             });
+
             // if new page enable next
-            $scope.pages = Math.ceil($scope.filteredEmployees.length / 5);
+            $scope.pages = Math.ceil(employees.length / 5);
             if ($scope.onPage != $scope.pages) {
               document.querySelector(".next").classList.remove("disabled");
             }
