@@ -1,15 +1,45 @@
 // create a module (myApp); create controller(myController) & register controller with module.
 var myApp = angular
   .module("myModule", [])
-  .controller("myController", function ($scope) {
-    // create an array of objects
-    var employees = [
+  .controller("myController", function ($scope, $filter) {
+    // data
+    $scope.employees = [
       {
         name: "Martin",
         email: "martin@patientbond.com",
         phone: 1234567890,
         gender: "male",
         age: 24,
+        degrees: [
+          {
+            education: "Bachelor's degree",
+            institute: "Chitkara University",
+            startDate: "08-12-2018",
+            endDate: "07-15-2022",
+            marks: "9CGPA",
+          },
+          {
+            education: "High school",
+            institute: "Swami Vivekanand Public School",
+            startDate: "08-12-2005",
+            endDate: "07-06-2017",
+            marks: "10CGPA",
+          },
+          {
+            education: "Post Graduation",
+            institute: "Thapar University",
+            startDate: "08-12-2022",
+            endDate: "07-06-2024",
+            marks: "60%",
+          },
+          {
+            education: "Phd",
+            institute: "Thapar University",
+            startDate: "08-12-2024",
+            endDate: "07-06-2026",
+            marks: "50%",
+          },
+        ],
       },
       {
         name: "Harry",
@@ -17,6 +47,36 @@ var myApp = angular
         phone: 4576981245,
         gender: "male",
         age: 22,
+        degrees: [
+          {
+            education: "Bachelor's degree",
+            institute: "Chitkara University",
+            startDate: "08-12-2018",
+            endDate: "07-15-2022",
+            marks: "9CGPA",
+          },
+          {
+            education: "High school",
+            institute: "Swami Vivekanand Public School",
+            startDate: "08-12-2005",
+            endDate: "07-06-2017",
+            marks: "10CGPA",
+          },
+          {
+            education: "Post Graduation",
+            institute: "Thapar University",
+            startDate: "08-12-2022",
+            endDate: "07-06-2024",
+            marks: "60%",
+          },
+          {
+            education: "Phd",
+            institute: "Thapar University",
+            startDate: "08-12-2024",
+            endDate: "07-06-2026",
+            marks: "50%",
+          },
+        ],
       },
       {
         name: "Pat",
@@ -24,6 +84,36 @@ var myApp = angular
         phone: 5483695124,
         gender: "male",
         age: 21,
+        degrees: [
+          {
+            education: "Bachelor's degree",
+            institute: "Chitkara University",
+            startDate: "08-12-2018",
+            endDate: "07-15-2022",
+            marks: "9CGPA",
+          },
+          {
+            education: "High school",
+            institute: "Swami Vivekanand Public School",
+            startDate: "08-12-2005",
+            endDate: "07-06-2017",
+            marks: "10CGPA",
+          },
+          {
+            education: "Post Graduation",
+            institute: "Thapar University",
+            startDate: "08-12-2022",
+            endDate: "07-06-2024",
+            marks: "60%",
+          },
+          {
+            education: "Phd",
+            institute: "Thapar University",
+            startDate: "08-12-2024",
+            endDate: "07-06-2026",
+            marks: "50%",
+          },
+        ],
       },
       {
         name: "Alex",
@@ -31,6 +121,36 @@ var myApp = angular
         phone: 9863245781,
         gender: "male",
         age: 23,
+        degrees: [
+          {
+            education: "Bachelor's degree",
+            institute: "Chitkara University",
+            startDate: "08-12-2018",
+            endDate: "07-15-2022",
+            marks: "9CGPA",
+          },
+          {
+            education: "High school",
+            institute: "Swami Vivekanand Public School",
+            startDate: "08-12-2005",
+            endDate: "07-06-2017",
+            marks: "10CGPA",
+          },
+          {
+            education: "Post Graduation",
+            institute: "Thapar University",
+            startDate: "08-12-2022",
+            endDate: "07-06-2024",
+            marks: "60%",
+          },
+          {
+            education: "Phd",
+            institute: "Thapar University",
+            startDate: "08-12-2024",
+            endDate: "07-06-2026",
+            marks: "50%",
+          },
+        ],
       },
       {
         name: "Nora Smith",
@@ -38,6 +158,36 @@ var myApp = angular
         phone: 7892453698,
         gender: "female",
         age: 23,
+        degrees: [
+          {
+            education: "Bachelor's degree",
+            institute: "Chitkara University",
+            startDate: "08-12-2018",
+            endDate: "07-15-2022",
+            marks: "9CGPA",
+          },
+          {
+            education: "High school",
+            institute: "Swami Vivekanand Public School",
+            startDate: "08-12-2005",
+            endDate: "07-06-2017",
+            marks: "10CGPA",
+          },
+          {
+            education: "Post Graduation",
+            institute: "Thapar University",
+            startDate: "08-12-2022",
+            endDate: "07-06-2024",
+            marks: "60%",
+          },
+          {
+            education: "Phd",
+            institute: "Thapar University",
+            startDate: "08-12-2024",
+            endDate: "07-06-2026",
+            marks: "50%",
+          },
+        ],
       },
       {
         name: "Joe",
@@ -103,139 +253,40 @@ var myApp = angular
         age: 31,
       },
     ];
-    // link scope variable with array of employees
-    $scope.employees = employees;
-
-    $scope.idx = 0;
-    $scope.setIndex = function (index) {
-      $scope.idx = index;
-      console.log($scope.idx);
+    $scope.currentPage = 0;
+    $scope.pageSize = 5;
+    $scope.searchText = "";
+    $scope.selectedEmployee = {};
+    $scope.getEmployees = function () {
+      return $filter("filter")($scope.employees, $scope.searchText);
     };
 
-    // to check and disable prev and next buttons
-    $scope.onPage = 1;
-    // index for showing limited records; for each page iteration increase by 5 for next page
-    $scope.startFrom = 0;
-    // calculate pages initially
-    $scope.pages = Math.ceil(employees.length / 5);
-
-    // Qualifications
-    $scope.degrees = [];
-    $scope.incRow = function () {
-      if (
-        document.getElementById("education").value == "" ||
-        document.getElementById("institute").value == "" ||
-        document.getElementById("startDate").value == "" ||
-        document.getElementById("endDate").value == "" ||
-        document.getElementById("marks").value == ""
-      ) {
-        document.getElementById("error").style.display = "block";
-        setTimeout(function () {
-          document.getElementById("error").style.display = "none";
-        }, 2000);
-      } else {
-        $scope.degrees.unshift({
-          education: document.getElementById("education").value,
-          institute: document.getElementById("institute").value,
-          startDate: document.getElementById("startDate").value,
-          endDate: document.getElementById("endDate").value,
-          marks: document.getElementById("marks").value,
-        });
-        document.getElementById("education").value = "";
-        document.getElementById("institute").value = "";
-        document.getElementById("startDate").value = "";
-        document.getElementById("endDate").value = "";
-        document.getElementById("marks").value = "";
-      }
+    $scope.numberOfPages = function () {
+      return Math.ceil($scope.getEmployees().length / $scope.pageSize);
     };
-    $scope.delRow = function (index) {
-      $scope.degrees.splice(index, 1);
+    $scope.$watch(
+      "searchText",
+      function (newValue, oldValue) {
+        if (oldValue != newValue) {
+          $scope.currentPage = 0;
+        }
+      },
+      true
+    );
+    $scope.$watch(
+      "currentPage",
+      function (newValue, oldValue) {
+        let temp = document.querySelectorAll(".page-number");
+        temp[oldValue].classList.remove("active");
+        temp[newValue].classList.add("active");
+      },
+      true
+    );
+    $scope.goToPage = function (page) {
+      $scope.currentPage = page;
     };
-
-    // calculate number of pages
-    $scope.calcPages = function (results) {
-      // update pages
-      $scope.pages = Math.ceil(results / 5);
-      return $scope.pages;
-    };
-
-    $scope.nextClick = function () {
-      $scope.onPage = $scope.onPage + 1;
-      // if on last page disable next
-      if ($scope.onPage == $scope.pages) {
-        document.querySelector(".next").classList.add("disabled");
-        document.querySelector(".prev").classList.remove("disabled");
-      }
-      // else remove disabled class
-      else {
-        document.querySelector(".prev").classList.remove("disabled");
-        document.querySelector(".next").classList.remove("disabled");
-      }
-      // add active class to current link and remove from previous
-      document
-        .querySelector(".active")
-        .nextElementSibling.classList.add("active");
-      document.querySelector(".active").classList.remove("active");
-      // show data by increasing index
-      $scope.startFrom += 5;
-      // disable search if needed
-      let input = document.querySelector(".input-group").firstElementChild;
-      if ($scope.onPage != 1) {
-        input.disabled = true;
-      } else {
-        input.disabled = false;
-      }
-    };
-    $scope.prevClick = function () {
-      $scope.onPage = $scope.onPage - 1;
-      // if on first page disable previous button
-      if ($scope.onPage == 1) {
-        document.querySelector(".prev").classList.add("disabled");
-        document.querySelector(".next").classList.remove("disabled");
-      } else {
-        document.querySelector(".prev").classList.remove("disabled");
-        document.querySelector(".next").classList.remove("disabled");
-      }
-      // for showing selected li and remove active from previous
-      document
-        .querySelector(".active")
-        .previousElementSibling.classList.add("active");
-      document
-        .querySelector(".active")
-        .nextElementSibling.classList.remove("active");
-      // show data by decreasing index
-      $scope.startFrom -= 5;
-      // disable search if needed
-      let input = document.querySelector(".input-group").firstElementChild;
-      if ($scope.onPage != 1) {
-        input.disabled = true;
-      } else {
-        input.disabled = false;
-      }
-    };
-    $scope.goToPage = function (index) {
-      $scope.onPage = index;
-      if ($scope.onPage == $scope.pages) {
-        document.querySelector(".next").classList.add("disabled");
-        document.querySelector(".prev").classList.remove("disabled");
-      } else if ($scope.onPage == 1) {
-        document.querySelector(".prev").classList.add("disabled");
-        document.querySelector(".next").classList.remove("disabled");
-      } else {
-        document.querySelector(".prev").classList.remove("disabled");
-        document.querySelector(".next").classList.remove("disabled");
-      }
-      document.querySelector(".active").classList.remove("active");
-      event.target.parentElement.classList.add("active");
-      // show content of that page
-      $scope.startFrom = (index - 1) * 5;
-      // disable search if needed
-      let input = document.querySelector(".input-group").firstElementChild;
-      if ($scope.onPage != 1) {
-        input.disabled = true;
-      } else {
-        input.disabled = false;
-      }
+    $scope.setEmployee = function (employee) {
+      $scope.selectedEmployee = employee;
     };
 
     // reset form when it is closed
@@ -258,6 +309,38 @@ var myApp = angular
       return usrAge;
     };
 
+    // add qualifications
+    $scope.degrees = [];
+    $scope.addRow = function () {
+      let edu = document.getElementById("education").value;
+      let inst = document.getElementById("institute").value;
+      let strt = document.getElementById("startDate").value;
+      let end = document.getElementById("endDate").value;
+      let marks = document.getElementById("marks").value;
+      if (edu == "" || inst == "" || strt == "" || end == "" || marks == "") {
+        document.getElementById("error").style.display = "block";
+        setTimeout(function () {
+          document.getElementById("error").style.display = "none";
+        }, 2000);
+      } else {
+        $scope.degrees.unshift({
+          education: edu,
+          institute: inst,
+          startDate: strt,
+          endDate: end,
+          marks: marks,
+        });
+        document.getElementById("education").value = "";
+        document.getElementById("institute").value = "";
+        document.getElementById("startDate").value = "";
+        document.getElementById("endDate").value = "";
+        document.getElementById("marks").value = "";
+      }
+    };
+    $scope.delRow = function (index) {
+      $scope.degrees.splice(index, 1);
+    };
+
     // form-validation
     (function () {
       "use strict";
@@ -270,27 +353,23 @@ var myApp = angular
             event.preventDefault();
             event.stopPropagation();
           } else {
-            employees.unshift({
-              name: document.getElementById("username").value,
+            $scope.employees.unshift({
+              name: document.getElementById("userName").value,
               email: document.getElementById("userEmail").value,
               phone: document.getElementById("userPhone").value,
               gender: document.getElementById("userGender").value,
-              age: document.getElementById("userAge").value,
+              age: document.getElementById("userAge").textContent,
               address: document.getElementById("userAddress").value,
               dob: document.getElementById("dob").value,
             });
-
-            // if new page enable next
-            $scope.pages = Math.ceil(employees.length / 5);
-            if ($scope.onPage != $scope.pages) {
-              document.querySelector(".next").classList.remove("disabled");
+            if ($scope.degrees.length >= 1) {
+              $scope.employees[0].degrees = [];
+              $scope.degrees.forEach((element) => {
+                $scope.employees[0].degrees.unshift(element);
+              });
             }
-            // reset form
-            form.reset();
-            // reset form-styles
-            form.classList.remove("was-validated");
             // close modal & Show success message
-            document.querySelector(".btn-close").click();
+            document.querySelector(".form-modal-close").click();
             document.querySelector(".alert").classList.toggle("fade");
             setTimeout(function () {
               document.querySelector(".alert").classList.add("fade");
@@ -302,15 +381,20 @@ var myApp = angular
         false
       );
     })();
-  })
-  .filter("range", function () {
-    // RETURNS ARRAY FOR RANGE IN NG-REPEAT
-    return function (input, total) {
-      total = parseInt(total);
-      for (var i = 2; i <= total; i++) {
-        input.push(i);
-      }
-
-      return input;
-    };
   });
+myApp.filter("startFrom", function () {
+  return function (input, start) {
+    start = +start;
+    return input.slice(start);
+  };
+});
+myApp.filter("range", function () {
+  // RETURNS ARRAY FOR RANGE IN NG-REPEAT
+  return function (input, total) {
+    total = parseInt(total);
+    for (var i = 2; i <= total; i++) {
+      input.push(i);
+    }
+    return input;
+  };
+});

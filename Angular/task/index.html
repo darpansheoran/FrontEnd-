@@ -52,10 +52,56 @@
         >
           Add user
         </button>
+        <!-- change number of rows -->
+        <div class="dropdown">
+          <button
+            id="rowSelect"
+            type="button"
+            class="btn btn-sm btn-outline-primary ms-2 dropdown-toggle"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Rows
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="rowSelect">
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                ng-click="pageSize=5;currentPage = 0"
+                >5</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                ng-click="pageSize=10;currentPage = 0"
+                >10</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                ng-click="pageSize=15;currentPage = 0"
+                >15</a
+              >
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div class="table-responsive px-3">
         <table class="table table-hover table-bordered">
+          <caption ng-show="getEmployees().length >= (currentPage+1)*pageSize ">
+            {{((currentPage)*pageSize)+1}}-{{(currentPage+1)*pageSize}} out of
+            {{getEmployees().length}}
+          </caption>
+          <caption ng-show="(currentPage+1)*pageSize >= getEmployees().length">
+            {{((currentPage)*pageSize)+1}}-{{getEmployees().length}} out of
+            {{getEmployees().length}}
+          </caption>
           <thead>
             <tr>
               <th class="col-name">Name</th>
@@ -65,13 +111,12 @@
               <th class="col-age">Age</th>
             </tr>
           </thead>
-          <tbody>
-            <!-- filteredEmployees array contains search results and startFrom is for pagination  -->
+          <tbody title="Click for more details">
             <tr
-              ng-click="setIndex($index)"
+              ng-click="setEmployee(employee)"
               data-bs-toggle="modal"
               data-bs-target="#completeDetails"
-              ng-repeat="employee in filteredEmployees = (employees | filter:searchText)  | limitTo:5:startFrom"
+              ng-repeat="employee in employees | filter:searchText | startFrom:currentPage*pageSize | limitTo:pageSize"
             >
               <td>{{employee.name}}</td>
               <td>{{employee.email}}</td>
@@ -84,44 +129,72 @@
       </div>
       <!-- pagination -->
       <ul
-        ng-if="calcPages(filteredEmployees.length) > 1"
+        ng-show="numberOfPages() > 1"
         class="pagination d-flex justify-content-center mt-4"
       >
         <!-- previous  button -->
-        <li class="page-item disabled prev">
+        <li ng-show="currentPage == 0" class="page-item prev disabled">
           <a
             class="page-link"
             href="#"
             aria-label="Previous"
-            ng-click="prevClick()"
+            ng-click="currentPage=currentPage-1"
           >
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
-        <!-- First link will be active -->
-        <li class="page-item active" ng-click="goToPage(1)">
+        <!-- disabled previous  button -->
+        <li ng-show="currentPage != 0" class="page-item prev">
+          <a
+            class="page-link"
+            href="#"
+            aria-label="Previous"
+            ng-click="currentPage=currentPage-1"
+          >
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <!-- first link will be active -->
+        <li class="page-item page-number active" ng-click="goToPage(0)">
           <a class="page-link" href="#">1</a>
         </li>
         <!-- other links;calc pages and create using ng-repeat -->
         <li
-          class="page-item"
-          ng-repeat="page in [] | range:calcPages(filteredEmployees.length)"
+          class="page-item page-number"
+          ng-repeat="page in [] | range:numberOfPages()"
         >
-          <a class="page-link" href="#" ng-click="goToPage(page)">{{page}}</a>
+          <a class="page-link" href="#" ng-click="goToPage(page-1)">{{page}}</a>
         </li>
         <!-- next button -->
-        <li class="page-item next">
+        <li
+          ng-show="getEmployees().length/pageSize - 1 > currentPage"
+          class="page-item next"
+        >
           <a
             class="page-link"
             href="#"
             aria-label="Next"
-            ng-click="nextClick()"
+            ng-click="currentPage=currentPage+1"
+          >
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+        <!-- disabled next button-->
+        <li
+          ng-show="currentPage >= getEmployees().length/pageSize - 1"
+          class="page-item next disabled"
+        >
+          <a
+            class="page-link"
+            href="#"
+            aria-label="Next"
+            ng-click="currentPage=currentPage+1"
           >
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
       </ul>
-      <!-- Modal for form -->
+      <!-- Modal form -->
       <div
         class="modal fade"
         id="formModal"
@@ -129,13 +202,15 @@
         aria-labelledby="userInputModal"
         aria-hidden="true"
       >
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="formModalLabel">Fill the form</h5>
+              <h5 class="modal-title" id="formModalLabel">
+                User registration form
+              </h5>
               <button
                 type="button"
-                class="btn-close"
+                class="btn-close form-modal-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
                 ng-click="resetForm()"
@@ -143,242 +218,214 @@
             </div>
             <div class="modal-body">
               <!-- form -->
-              <form class="row g-1 needs-validation" novalidate>
-                <!-- name -->
-                <div class="col-md-4">
-                  <label for="username" class="form-label">Name:</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    placeholder="John Doe"
-                    aria-label="name"
-                    aria-describedby="Username"
-                    required
-                  />
-                  <div class="invalid-feedback">Please provide your name.</div>
-                </div>
-                <!-- email -->
-                <div class="col-md-5">
-                  <label for="userEmail" class="form-label">Email:</label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    placeholder="name@example.com"
-                    id="userEmail"
-                    aria-label="email"
-                    aria-describedby="UserEmail"
-                    required
-                  />
-                  <div class="invalid-feedback">Provide a valid email.</div>
-                </div>
-                <!-- gender -->
-                <div class="col-md-3">
-                  <label for="userGender" class="form-label">Gender:</label>
-                  <select
-                    class="form-select"
-                    aria-label="select"
-                    id="userGender"
-                    required
-                  >
-                    <option selected disabled value="">Select</option>
-                    <option value="male">male</option>
-                    <option value="female">female</option>
-                  </select>
-                  <div class="invalid-feedback">Select your gender.</div>
-                </div>
-                <!-- address -->
-                <div class="col-md-12">
-                  <label for="userAddress" class="form-label">Address:</label>
-                  <textarea
-                    class="form-control"
-                    id="userAddress"
-                    placeholder="1234 Main St"
-                    required
-                  ></textarea>
-                  <div class="invalid-feedback">
-                    Please provide your address.
+              <form class="needs-validation text-start" novalidate>
+                <!-- personal details -->
+                <div class="row g-3">
+                  <!-- name -->
+                  <div class="col-md-6">
+                    <label for="username" class="form-label">Name:</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="userName"
+                      placeholder="John Doe"
+                      aria-label="name"
+                      aria-describedby="Username"
+                      required
+                    />
+                    <div class="invalid-feedback">
+                      Please provide your name.
+                    </div>
                   </div>
-                </div>
-                <!-- phone -->
-                <div class="col-md-5">
-                  <label for="userPhone" class="form-label">Phone:</label>
-                  <input
-                    type="tel"
-                    pattern="[1-9]{1}[0-9]{9}"
-                    class="form-control"
-                    id="userPhone"
-                    placeholder="Phone number"
-                    aria-label="number"
-                    aria-describedby="PhoneNumber"
-                    required
-                  />
-                  <div class="invalid-feedback">Provide a valid Phone no.</div>
-                </div>
-                <!-- dob -->
-                <div class="col-md-4">
-                  <label for="dob" class="form-label">Dob:</label>
-                  <input
-                    id="dob"
-                    type="date"
-                    class="form-control"
-                    ng-model="age"
-                    aria-label="dob"
-                    aria-describedby="dob"
-                    required
-                  />
-                  <div class="invalid-feedback">Select your birthday.</div>
-                </div>
-                <!-- age -->
-                <div class="col-md-3">
-                  <label for="userAge" class="form-label">Age:</label>
-                  <input
-                    type="text"
-                    disabled
-                    value="{{calcAge()}}"
-                    class="form-control"
-                    id="userAge"
-                  />
+                  <!-- email -->
+                  <div class="col-md-6">
+                    <label for="userEmail" class="form-label">Email:</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      placeholder="name@example.com"
+                      id="userEmail"
+                      aria-label="email"
+                      aria-describedby="UserEmail"
+                      required
+                    />
+                    <div class="invalid-feedback">Provide a valid email.</div>
+                  </div>
+                  <!-- address -->
+                  <div class="col-md-12">
+                    <label for="userAddress" class="form-label">Address:</label>
+                    <textarea
+                      class="form-control"
+                      id="userAddress"
+                      placeholder="1234 Main St"
+                      required
+                    ></textarea>
+                    <div class="invalid-feedback">
+                      Please provide your address.
+                    </div>
+                  </div>
+                  <!-- phone -->
+                  <div class="col-md-5">
+                    <label for="userPhone" class="form-label">Phone:</label>
+                    <input
+                      type="tel"
+                      pattern="[1-9]{1}[0-9]{9}"
+                      class="form-control"
+                      id="userPhone"
+                      placeholder="9050607080"
+                      aria-label="number"
+                      aria-describedby="PhoneNumber"
+                      required
+                    />
+                    <div class="invalid-feedback">
+                      Provide a valid Phone no.
+                    </div>
+                  </div>
+                  <!-- gender -->
+                  <div class="col-md-3">
+                    <label for="userGender" class="form-label">Gender:</label>
+                    <select
+                      class="form-select"
+                      aria-label="select"
+                      id="userGender"
+                      required
+                    >
+                      <option selected disabled value="">Select</option>
+                      <option value="male">male</option>
+                      <option value="female">female</option>
+                    </select>
+                    <div class="invalid-feedback">Select an option.</div>
+                  </div>
+                  <!-- dob -->
+                  <div class="col-md-4">
+                    <label for="dob" class="form-label"
+                      >Dob:
+                      <span class="text-muted" id="userAge">{{calcAge()}}</span>
+                      <span class="text-muted"> year(s)</span>
+                    </label>
+                    <input
+                      id="dob"
+                      type="date"
+                      class="form-control"
+                      ng-model="age"
+                      aria-label="dob"
+                      aria-describedby="dob"
+                      required
+                    />
+                    <div class="invalid-feedback">Select your birthday.</div>
+                  </div>
                 </div>
                 <!-- Qualifications -->
-                <!--  Heading -->
-                <div
-                  class="
-                    col-md-12
-                    mt-3
-                    py-2
-                    text-center
-                    border-top border-muted
-                  "
-                >
-                  <h5>Education & Qualification</h5>
-                </div>
-                <!-- Labels -->
-                <div class="col-md-12" style="text-align: center">
-                  <div class="row g-1">
-                    <div class="col-md-2">Education</div>
-                    <div class="col-md-2">Institute</div>
-                    <div class="col-md-2">Start Date</div>
-                    <div class="col-md-2">End Date</div>
-                    <div class="col-md-2">%/CGPA</div>
-                    <div class="col-md-2">Action</div>
+                <div class="row g-1 text-center">
+                  <h5 class="mt-4">Education & Qualification(optional)</h5>
+                  <!-- error message -->
+                  <div id="error" style="color: red; display: none">
+                    Please fill all the fields
                   </div>
-                </div>
-                <!-- Input -->
-                <div class="col-md-12 py-2">
-                  <div class="row g-1">
-                    <!-- education -->
-                    <div class="col-md-2">
-                      <select
-                        class="form-select no-validate"
-                        aria-label="education"
-                        id="education"
-                      >
-                        <option selected disabled value="">Select</option>
-                        <option value="Phd">Phd.</option>
-                        <option value="Post Graduation">Post Graduation</option>
-                        <option value="Bachelor's degree">
-                          Bachelor's degree
-                        </option>
-                        <option value="Diploma">Diploma</option>
-                        <option value="High school">High school</option>
-                      </select>
-                    </div>
-                    <!-- institute -->
-                    <div class="col-md-2">
-                      <input
-                        type="text"
-                        class="form-control no-validate"
-                        id="institute"
-                      />
-                    </div>
-                    <!-- Start Date -->
-                    <div class="col-md-2">
-                      <input
-                        type="text"
-                        placeholder="MM-dd-yyyy"
-                        class="form-control no-validate"
-                        id="startDate"
-                      />
-                    </div>
-                    <!-- End Date -->
-                    <div class="col-md-2">
-                      <input
-                        type="text"
-                        placeholder="MM-dd-yyyy"
-                        class="form-control no-validate"
-                        id="endDate"
-                      />
-                    </div>
-                    <!-- marks -->
-                    <div class="col-md-2">
-                      <input
-                        type="text"
-                        class="form-control no-validate"
-                        id="marks"
-                      />
-                    </div>
-                    <!-- buttons -->
-                    <div class="col-md-2">
-                      <div
-                        class="d-flex justify-content-center align-items-center"
-                      >
-                        <i
-                          ng-click="incRow()"
-                          class="fas fa-plus-square p-1"
-                          style="color: slateblue"
-                        ></i>
+                  <!-- Input -->
+                  <div class="col-md-12 py-2">
+                    <div class="row g-1">
+                      <!-- education -->
+                      <div class="col-md-2">
+                        <label for="education" class="form-label"
+                          >Education</label
+                        >
+                        <select
+                          class="form-select no-validate"
+                          aria-label="education"
+                          id="education"
+                        >
+                          <option selected disabled value="">Select</option>
+                          <option value="Phd">Phd.</option>
+                          <option value="Post Graduation">
+                            Post Graduation
+                          </option>
+                          <option value="Bachelor's degree">
+                            Bachelor's degree
+                          </option>
+                          <option value="Diploma">Diploma</option>
+                          <option value="High school">High school</option>
+                        </select>
+                      </div>
+                      <!-- institute -->
+                      <div class="col-md-2">
+                        <label for="institute" class="form-label"
+                          >Institute</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control no-validate"
+                          id="institute"
+                        />
+                      </div>
+                      <!-- Start Date -->
+                      <div class="col-md-2">
+                        <label for="startDate" class="form-label"
+                          >Start-date</label
+                        >
+                        <input
+                          type="date"
+                          placeholder="MM-dd-yyyy"
+                          class="form-control no-validate"
+                          id="startDate"
+                        />
+                      </div>
+                      <!-- End Date -->
+                      <div class="col-md-2">
+                        <label for="endDate" class="form-label">End-date</label>
+                        <input
+                          type="date"
+                          placeholder="MM-dd-yyyy"
+                          class="form-control no-validate"
+                          id="endDate"
+                        />
+                      </div>
+                      <!-- marks -->
+                      <div class="col-md-2">
+                        <label for="marks" class="form-label">Marks</label>
+                        <input
+                          type="text"
+                          class="form-control no-validate"
+                          id="marks"
+                        />
+                      </div>
+                      <!-- buttons -->
+                      <div class="col-md-2">
+                        <label for="action" class="form-label">Action</label>
+                        <div
+                          class="
+                            d-flex
+                            justify-content-center
+                            align-items-center
+                          "
+                        >
+                          <i
+                            ng-click="addRow()"
+                            class="fas fa-plus-square p-1"
+                            style="color: slateblue"
+                          ></i>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <!-- list of qualifications -->
-                <div class="col-md-12 py-2" ng-repeat="degree in degrees">
-                  <div class="row g-1">
-                    <!-- education -->
-                    <div class="col-md-2">
-                      <p>{{degree.education}}</p>
-                    </div>
-                    <!-- institute -->
-                    <div class="col-md-2">
-                      <p>{{degree.institute}}</p>
-                    </div>
-                    <!-- Start Date -->
-                    <div class="col-md-2">
-                      <p>{{degree.startDate}}</p>
-                    </div>
-                    <!-- End Date -->
-                    <div class="col-md-2">
-                      <p>{{degree.endDate}}</p>
-                    </div>
-                    <!-- marks -->
-                    <div class="col-md-2">
-                      <p>{{degree.marks}}</p>
-                    </div>
-                    <!-- buttons -->
-                    <div class="col-md-2">
-                      <div
-                        class="d-flex justify-content-center align-items-center"
-                      >
-                        <i
-                          ng-click="delRow($index)"
-                          class="fas fa-trash p-1"
-                          style="color: red"
-                        ></i>
-                      </div>
+                  <!-- list of qualifications -->
+                  <div class="col-md-12 py-2" ng-repeat="degree in degrees">
+                    <div class="d-flex justify-content-between px-2">
+                      <p class="pt-1">
+                        {{degree.education}} from {{degree.institute}}
+                        ({{degree.startDate}} to {{degree.endDate}}). Scoring
+                        {{degree.marks}}
+                      </p>
+                      <i
+                        ng-click="delRow($index)"
+                        class="fas fa-times p-1"
+                        style="color: red"
+                      ></i>
                     </div>
                   </div>
-                </div>
-                <!-- error message -->
-                <div
-                  id="error"
-                  class="col-md-12"
-                  style="text-align: center; color: red; display: none"
-                >
-                  Please fill all the fields
                 </div>
                 <!-- submit -->
-                <div class="input-group col-12 mt-3 py-2">
+                <div class="input-group mt-3 py-2">
                   <button type="submit" class="btn btn-outline-success mx-auto">
                     Submit
                   </button>
@@ -388,7 +435,7 @@
           </div>
         </div>
       </div>
-      <!-- Modal for user details -->
+      <!-- Modal user details -->
       <div
         class="modal fade"
         id="completeDetails"
@@ -396,15 +443,17 @@
         aria-labelledby="userDetails"
         aria-hidden="true"
       >
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title">Complete user data</h4>
               <button
                 type="button"
-                class="btn-close"
+                class="btn-close info-modal-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+                data-bs-target="#carousel"
+                data-bs-slide-to="0"
               ></button>
             </div>
             <div class="modal-body">
@@ -417,65 +466,98 @@
                 <div class="carousel-inner">
                   <div class="carousel-item active">
                     <h5>Personal Details</h5>
-                    <div class="my-2 row g-1 text-start">
-                      <!-- name -->
+                    <div
+                      class="py-3 row g-3 text-start"
+                      style="overflow-wrap: break-word"
+                    >
                       <div class="col-md-6">
                         <p>
                           <span class="fw-bolder">Name:</span>
-                          {{filteredEmployees[idx].name}}
+                          {{selectedEmployee.name}}
                         </p>
                       </div>
-                      <!-- gender -->
+
                       <div class="col-md-6">
                         <p>
-                          <span class="fw-bolder">Gender:</span>
-                          {{filteredEmployees[idx].gender}}
+                          <span class="fw-bolder">Email:</span>
+                          {{selectedEmployee.email}}
                         </p>
                       </div>
-                      <!-- email -->
-                      <div class="col-md-12">
-                        <p>Email: {{filteredEmployees[idx].email}}</p>
-                      </div>
-                      <!-- address -->
+
                       <div class="col-md-6">
-                        <p>Address: {{filteredEmployees[idx].address}}</p>
+                        <p ng-show="selectedEmployee.dob">
+                          <span class="fw-bolder">Dob:</span>
+                          {{selectedEmployee.dob}}
+                        </p>
+                        <p ng-show="!selectedEmployee.dob">
+                          <span class="fw-bolder">Dob:</span> Not available.
+                        </p>
                       </div>
-                      <!-- phone -->
+
                       <div class="col-md-6">
-                        <p>Phone: {{filteredEmployees[idx].phone}}</p>
+                        <p class="text-capitalize">
+                          <span class="fw-bolder">Gender:</span>
+                          {{selectedEmployee.gender}}
+                        </p>
                       </div>
-                      <!-- dob -->
+
                       <div class="col-md-6">
-                        <p>Dob: {{filteredEmployees[idx].dob}}</p>
+                        <p ng-show="selectedEmployee.address">
+                          <span class="fw-bolder">Address:</span>
+                          {{selectedEmployee.address}}
+                        </p>
+                        <p ng-show="!selectedEmployee.address">
+                          <span class="fw-bolder">Address:</span> Not available.
+                        </p>
                       </div>
-                      <!-- age -->
+
                       <div class="col-md-6">
-                        <p>Age: {{filteredEmployees[idx].age}}</p>
+                        <p>
+                          <span class="fw-bolder">Phone:</span>
+                          {{selectedEmployee.phone}}
+                        </p>
+                      </div>
+
+                      <div class="col-md-6">
+                        <p>
+                          <span class="fw-bolder">Age:</span>
+                          {{selectedEmployee.age}}
+                        </p>
                       </div>
                     </div>
-                    <button
-                      class="btn-outline-primary"
-                      type="button"
+                    <i
+                      class="fas fa-arrow-right fs-5"
                       data-bs-target="#carousel"
                       data-bs-slide-to="1"
                       aria-label="Slide 2"
-                    >
-                      Next
-                    </button>
+                    ></i>
                   </div>
                   <div class="carousel-item">
-                    <h5>Education & Qualification</h5>
-                    <button
-                      class="btn-outline-primary"
-                      type="button"
+                    <h5 class="pb-2">Education & Qualification</h5>
+                    <div
+                      ng-if="!selectedEmployee.degrees"
+                      class="text-center"
+                      style="height: 200px"
+                    >
+                      No data Available
+                    </div>
+                    <div
+                      class="row py-2 text-start"
+                      ng-repeat="degree in selectedEmployee.degrees"
+                    >
+                      <p>
+                        {{degree.education}} from {{degree.institute}}
+                        ({{degree.startDate}} to {{degree.endDate}}). Scoring
+                        {{degree.marks}}
+                      </p>
+                    </div>
+                    <i
+                      class="fas fa-arrow-left fs-5 pt-3"
                       data-bs-target="#carousel"
                       data-bs-slide-to="0"
-                      class="active"
                       aria-current="true"
                       aria-label="Slide 1"
-                    >
-                      Previous
-                    </button>
+                    ></i>
                   </div>
                 </div>
               </div>
@@ -483,7 +565,6 @@
           </div>
         </div>
       </div>
-
       <!-- success message -->
       <div
         class="
@@ -522,8 +603,8 @@
     <!-- <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script> -->
     <!-- Bootstrap cdn -->
     <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"
-      integrity="sha384-lpyLfhYuitXl2zRZ5Bn2fqnhNAKOAaM/0Kr9laMspuaMiZfGmfwRNFh8HlMy49eQ"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
       crossorigin="anonymous"
     ></script>
   </body>
