@@ -341,6 +341,23 @@ var myApp = angular
       $scope.degrees.splice(index, 1);
     };
 
+    // set min date
+    $scope.startDate = new Date();
+    $scope.changed = function () {
+      let today = $scope.startDate;
+      let dd = today.getDate();
+      let mm = today.getMonth() + 1; //January is 0!
+      let yyyy = today.getFullYear();
+      if (dd < 10) {
+        dd = "0" + dd;
+      }
+      if (mm < 10) {
+        mm = "0" + mm;
+      }
+      today = yyyy + "-" + mm + "-" + dd;
+      document.getElementById("endDate").setAttribute("min", today);
+    };
+
     // form-validation
     (function () {
       "use strict";
@@ -362,6 +379,7 @@ var myApp = angular
               address: document.getElementById("userAddress").value,
               dob: document.getElementById("dob").value,
             });
+            // add degree to employee
             if ($scope.degrees.length >= 1) {
               $scope.employees[0].degrees = [];
               $scope.degrees.forEach((element) => {
@@ -380,6 +398,20 @@ var myApp = angular
         },
         false
       );
+      // date selector set max date
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1; //January is 0!
+      var yyyy = today.getFullYear();
+      if (dd < 10) {
+        dd = "0" + dd;
+      }
+      if (mm < 10) {
+        mm = "0" + mm;
+      }
+      today = yyyy + "-" + mm + "-" + dd;
+      document.getElementById("dob").setAttribute("max", today);
+      document.getElementById("startDate").setAttribute("max", today);
     })();
   });
 myApp.filter("startFrom", function () {

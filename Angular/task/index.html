@@ -291,8 +291,8 @@
                       required
                     >
                       <option selected disabled value="">Select</option>
-                      <option value="male">male</option>
-                      <option value="female">female</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
                     </select>
                     <div class="invalid-feedback">Select an option.</div>
                   </div>
@@ -306,6 +306,8 @@
                     <input
                       id="dob"
                       type="date"
+                      min="1900-01-01"
+                      max=""
                       class="form-control"
                       ng-model="age"
                       aria-label="dob"
@@ -365,9 +367,13 @@
                         >
                         <input
                           type="date"
+                          min="1900-01-01"
+                          max=""
                           placeholder="MM-dd-yyyy"
                           class="form-control no-validate"
                           id="startDate"
+                          ng-model="startDate"
+                          ng-change="changed()"
                         />
                       </div>
                       <!-- End Date -->
@@ -375,6 +381,8 @@
                         <label for="endDate" class="form-label">End-date</label>
                         <input
                           type="date"
+                          min=""
+                          max=""
                           placeholder="MM-dd-yyyy"
                           class="form-control no-validate"
                           id="endDate"
@@ -410,17 +418,78 @@
                   </div>
                   <!-- list of qualifications -->
                   <div class="col-md-12 py-2" ng-repeat="degree in degrees">
-                    <div class="d-flex justify-content-between px-2">
-                      <p class="pt-1">
-                        {{degree.education}} from {{degree.institute}}
-                        ({{degree.startDate}} to {{degree.endDate}}). Scoring
-                        {{degree.marks}}
-                      </p>
-                      <i
-                        ng-click="delRow($index)"
-                        class="fas fa-times p-1"
-                        style="color: red"
-                      ></i>
+                    <div class="row g-1">
+                      <!-- education -->
+                      <div class="col-md-2">
+                        <select
+                          class="form-select no-validate"
+                          aria-label="education"
+                          ng-model="degrees[$index].education"
+                        >
+                          <option selected disabled value="">
+                            {{degree.education}}
+                          </option>
+                          <option value="Phd">Phd.</option>
+                          <option value="Post Graduation">
+                            Post Graduation
+                          </option>
+                          <option value="Bachelor's degree">
+                            Bachelor's degree
+                          </option>
+                          <option value="Diploma">Diploma</option>
+                          <option value="High school">High school</option>
+                        </select>
+                      </div>
+                      <!-- institute -->
+                      <div class="col-md-2">
+                        <input
+                          type="text"
+                          ng-model="degrees[$index].institute"
+                          class="form-control no-validate"
+                        />
+                      </div>
+                      <!-- Start Date -->
+                      <div class="col-md-2">
+                        <input
+                          type="text"
+                          ng-model="degrees[$index].startDate"
+                          placeholder="MM-dd-yyyy"
+                          class="form-control no-validate"
+                        />
+                      </div>
+                      <!-- End Date -->
+                      <div class="col-md-2">
+                        <input
+                          type="text"
+                          ng-model="degrees[$index].endDate"
+                          placeholder="MM-dd-yyyy"
+                          class="form-control no-validate"
+                        />
+                      </div>
+                      <!-- marks -->
+                      <div class="col-md-2">
+                        <input
+                          type="text"
+                          ng-model="degrees[$index].marks"
+                          class="form-control no-validate"
+                        />
+                      </div>
+                      <!-- buttons -->
+                      <div class="col-md-2">
+                        <div
+                          class="
+                            d-flex
+                            justify-content-center
+                            align-items-center
+                          "
+                        >
+                          <i
+                            ng-click="delRow($index)"
+                            class="fas fa-times p-1"
+                            style="color: red"
+                          ></i>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
