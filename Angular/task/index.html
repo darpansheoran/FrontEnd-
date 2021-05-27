@@ -44,18 +44,17 @@
         />
         <!-- Button trigger modal -->
         <button
-          id="model-btn"
           type="button"
           class="btn btn-outline-primary ms-2"
           data-bs-toggle="modal"
           data-bs-target="#formModal"
+          ng-click="resetForm()"
         >
           Add user
         </button>
         <!-- change number of rows -->
         <div class="dropdown">
           <button
-            id="rowSelect"
             type="button"
             class="btn btn-sm btn-outline-primary ms-2 dropdown-toggle"
             data-bs-toggle="dropdown"
@@ -94,13 +93,10 @@
 
       <div class="table-responsive px-3">
         <table class="table table-hover table-bordered">
-          <caption ng-show="getEmployees().length >= (currentPage+1)*pageSize ">
-            {{((currentPage)*pageSize)+1}}-{{(currentPage+1)*pageSize}} out of
-            {{getEmployees().length}}
-          </caption>
-          <caption ng-show="(currentPage+1)*pageSize >= getEmployees().length">
-            {{((currentPage)*pageSize)+1}}-{{getEmployees().length}} out of
-            {{getEmployees().length}}
+          <caption>
+            {{((currentPage)*pageSize)+1}}-{{(((currentPage+1)*pageSize) >
+            getEmployees().length) ? getEmployees().length :
+            ((currentPage+1)*pageSize)}} out of {{getEmployees().length}}
           </caption>
           <thead>
             <tr>
@@ -134,12 +130,7 @@
       >
         <!-- previous  button -->
         <li ng-show="currentPage == 0" class="page-item prev disabled">
-          <a
-            class="page-link"
-            href="#"
-            aria-label="Previous"
-            ng-click="currentPage=currentPage-1"
-          >
+          <a class="page-link" href="#" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
@@ -184,12 +175,7 @@
           ng-show="currentPage >= getEmployees().length/pageSize - 1"
           class="page-item next disabled"
         >
-          <a
-            class="page-link"
-            href="#"
-            aria-label="Next"
-            ng-click="currentPage=currentPage+1"
-          >
+          <a class="page-link" href="#" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
@@ -199,14 +185,27 @@
         class="modal fade"
         id="formModal"
         tabindex="-1"
+        style="overflow-x: hidden; overflow-y: auto"
+        data-bs-backdrop="static"
         aria-labelledby="userInputModal"
         aria-hidden="true"
       >
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="formModalLabel">
+              <h5
+                ng-show="!selectedEmployee.name"
+                class="modal-title"
+                id="formModalLabel"
+              >
                 User registration form
+              </h5>
+              <h5
+                ng-show="selectedEmployee.name"
+                class="modal-title"
+                id="formModalLabel"
+              >
+                Edit user details
               </h5>
               <button
                 type="button"
@@ -231,6 +230,7 @@
                       placeholder="John Doe"
                       aria-label="name"
                       aria-describedby="Username"
+                      value="{{selectedEmployee.name}}"
                       required
                     />
                     <div class="invalid-feedback">
@@ -244,6 +244,7 @@
                       type="email"
                       class="form-control"
                       placeholder="name@example.com"
+                      value="{{selectedEmployee.email}}"
                       id="userEmail"
                       aria-label="email"
                       aria-describedby="UserEmail"
@@ -259,7 +260,9 @@
                       id="userAddress"
                       placeholder="1234 Main St"
                       required
-                    ></textarea>
+                    >
+{{selectedEmployee.address}}</textarea
+                    >
                     <div class="invalid-feedback">
                       Please provide your address.
                     </div>
@@ -271,6 +274,7 @@
                       type="tel"
                       pattern="[1-9]{1}[0-9]{9}"
                       class="form-control"
+                      value="{{selectedEmployee.phone}}"
                       id="userPhone"
                       placeholder="9050607080"
                       aria-label="number"
@@ -290,9 +294,36 @@
                       id="userGender"
                       required
                     >
-                      <option selected disabled value="">Select</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
+                      <!-- for editing -->
+                      <option
+                        ng-if="selectedEmployee.gender"
+                        value="{{selectedEmployee.gender}}"
+                        selected
+                      >
+                        {{selectedEmployee.gender | capitalize}}
+                      </option>
+                      <option
+                        ng-if="selectedEmployee.gender"
+                        value="{{(selectedEmployee.gender == 'female' ? 'male' : 'female')}}"
+                      >
+                        {{(selectedEmployee.gender == 'female' ? 'male' :
+                        'female') | capitalize }}
+                      </option>
+                      <!-- for adding user -->
+                      <option
+                        ng-if="!selectedEmployee.gender"
+                        selected
+                        disabled
+                        value=""
+                      >
+                        Select
+                      </option>
+                      <option ng-if="!selectedEmployee.gender" value="male">
+                        Male
+                      </option>
+                      <option ng-if="!selectedEmployee.gender" value="female">
+                        Female
+                      </option>
                     </select>
                     <div class="invalid-feedback">Select an option.</div>
                   </div>
@@ -369,11 +400,10 @@
                           type="date"
                           min="1900-01-01"
                           max=""
-                          placeholder="MM-dd-yyyy"
                           class="form-control no-validate"
                           id="startDate"
                           ng-model="startDate"
-                          ng-change="changed()"
+                          ng-change="dateChanged()"
                         />
                       </div>
                       <!-- End Date -->
@@ -383,7 +413,6 @@
                           type="date"
                           min=""
                           max=""
-                          placeholder="MM-dd-yyyy"
                           class="form-control no-validate"
                           id="endDate"
                         />
@@ -422,9 +451,10 @@
                       <!-- education -->
                       <div class="col-md-2">
                         <select
-                          class="form-select no-validate"
+                          class="form-select"
                           aria-label="education"
                           ng-model="degrees[$index].education"
+                          required
                         >
                           <option selected disabled value="">
                             {{degree.education}}
@@ -445,7 +475,8 @@
                         <input
                           type="text"
                           ng-model="degrees[$index].institute"
-                          class="form-control no-validate"
+                          class="form-control"
+                          required
                         />
                       </div>
                       <!-- Start Date -->
@@ -454,7 +485,8 @@
                           type="text"
                           ng-model="degrees[$index].startDate"
                           placeholder="MM-dd-yyyy"
-                          class="form-control no-validate"
+                          class="form-control"
+                          required
                         />
                       </div>
                       <!-- End Date -->
@@ -463,7 +495,8 @@
                           type="text"
                           ng-model="degrees[$index].endDate"
                           placeholder="MM-dd-yyyy"
-                          class="form-control no-validate"
+                          class="form-control"
+                          required
                         />
                       </div>
                       <!-- marks -->
@@ -471,7 +504,8 @@
                         <input
                           type="text"
                           ng-model="degrees[$index].marks"
-                          class="form-control no-validate"
+                          class="form-control"
+                          required
                         />
                       </div>
                       <!-- buttons -->
@@ -507,12 +541,13 @@
       <!-- Modal user details -->
       <div
         class="modal fade"
+        data-bs-backdrop="static"
         id="completeDetails"
         tabindex="-1"
         aria-labelledby="userDetails"
         aria-hidden="true"
       >
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-md">
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title">Complete user data</h4>
@@ -533,7 +568,7 @@
                 data-bs-interval="false"
               >
                 <div class="carousel-inner">
-                  <div class="carousel-item active">
+                  <div class="carousel-item active position-relative">
                     <h5>Personal Details</h5>
                     <div
                       class="py-3 row g-3 text-start"
@@ -595,19 +630,16 @@
                       </div>
                     </div>
                     <i
-                      class="fas fa-arrow-right fs-5"
+                      class="fas fa-arrow-right fs-5 position-absolute"
                       data-bs-target="#carousel"
                       data-bs-slide-to="1"
                       aria-label="Slide 2"
+                      style="bottom: 10px"
                     ></i>
                   </div>
-                  <div class="carousel-item">
+                  <div class="carousel-item position-relative">
                     <h5 class="pb-2">Education & Qualification</h5>
-                    <div
-                      ng-if="!selectedEmployee.degrees"
-                      class="text-center"
-                      style="height: 200px"
-                    >
+                    <div ng-if="!selectedEmployee.degrees" class="text-center">
                       No data Available
                     </div>
                     <div
@@ -621,34 +653,59 @@
                       </p>
                     </div>
                     <i
-                      class="fas fa-arrow-left fs-5 pt-3"
+                      class="fas fa-arrow-left fs-5 pt-3 position-absolute"
                       data-bs-target="#carousel"
                       data-bs-slide-to="0"
                       aria-current="true"
                       aria-label="Slide 1"
+                      style="bottom: 10px"
                     ></i>
                   </div>
                 </div>
               </div>
             </div>
+            <div class="modal-footer d-flex justify-content-between">
+              <!-- Edit user -->
+              <button
+                ng-click="editUser(selectedEmployee)"
+                type="button"
+                class="btn btn-outline-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#formModal"
+                data-bs-dismiss="modal"
+              >
+                Edit
+              </button>
+              <!-- Delete user -->
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                data-bs-dismiss="modal"
+                ng-click="deleteUser(selectedEmployee)"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       </div>
-      <!-- success message -->
+      <!-- add message -->
       <div
-        class="
-          alert alert-primary
-          fade
-          d-flex
-          justify-content-center
-          p-2
-          mt-2
-          w-75
-          mx-auto
-        "
-        role="alert"
+        class="alert alert-primary p-2 mt-2 w-75 mx-auto"
+        style="display: none"
       >
         <div><strong>New User Added</strong></div>
+      </div>
+      <!-- update message -->
+      <div class="alert alert-info p-2 mt-2 w-75 mx-auto" style="display: none">
+        <div><strong>User info updated</strong></div>
+      </div>
+      <!-- delete message -->
+      <div
+        class="alert alert-danger p-2 mt-2 w-75 mx-auto"
+        style="display: none"
+      >
+        <div><strong>User deleted</strong></div>
       </div>
     </div>
 

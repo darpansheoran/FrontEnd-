@@ -9,7 +9,9 @@ var myApp = angular
         email: "martin@patientbond.com",
         phone: 1234567890,
         gender: "male",
-        age: 24,
+        age: 22,
+        address: "1234 Main St.",
+        dob: "1998-09-07",
         degrees: [
           {
             education: "Bachelor's degree",
@@ -17,27 +19,6 @@ var myApp = angular
             startDate: "08-12-2018",
             endDate: "07-15-2022",
             marks: "9CGPA",
-          },
-          {
-            education: "High school",
-            institute: "Swami Vivekanand Public School",
-            startDate: "08-12-2005",
-            endDate: "07-06-2017",
-            marks: "10CGPA",
-          },
-          {
-            education: "Post Graduation",
-            institute: "Thapar University",
-            startDate: "08-12-2022",
-            endDate: "07-06-2024",
-            marks: "60%",
-          },
-          {
-            education: "Phd",
-            institute: "Thapar University",
-            startDate: "08-12-2024",
-            endDate: "07-06-2026",
-            marks: "50%",
           },
         ],
       },
@@ -46,7 +27,9 @@ var myApp = angular
         email: "harry@hotmail.com",
         phone: 4576981245,
         gender: "male",
-        age: 22,
+        age: 21,
+        address: "1234 Main St.",
+        dob: "1999-09-07",
         degrees: [
           {
             education: "Bachelor's degree",
@@ -54,27 +37,6 @@ var myApp = angular
             startDate: "08-12-2018",
             endDate: "07-15-2022",
             marks: "9CGPA",
-          },
-          {
-            education: "High school",
-            institute: "Swami Vivekanand Public School",
-            startDate: "08-12-2005",
-            endDate: "07-06-2017",
-            marks: "10CGPA",
-          },
-          {
-            education: "Post Graduation",
-            institute: "Thapar University",
-            startDate: "08-12-2022",
-            endDate: "07-06-2024",
-            marks: "60%",
-          },
-          {
-            education: "Phd",
-            institute: "Thapar University",
-            startDate: "08-12-2024",
-            endDate: "07-06-2026",
-            marks: "50%",
           },
         ],
       },
@@ -83,7 +45,9 @@ var myApp = angular
         email: "pat@hotmail.com",
         phone: 5483695124,
         gender: "male",
-        age: 21,
+        age: 20,
+        address: "1234 Main St.",
+        dob: "2000-09-07",
         degrees: [
           {
             education: "Bachelor's degree",
@@ -91,27 +55,6 @@ var myApp = angular
             startDate: "08-12-2018",
             endDate: "07-15-2022",
             marks: "9CGPA",
-          },
-          {
-            education: "High school",
-            institute: "Swami Vivekanand Public School",
-            startDate: "08-12-2005",
-            endDate: "07-06-2017",
-            marks: "10CGPA",
-          },
-          {
-            education: "Post Graduation",
-            institute: "Thapar University",
-            startDate: "08-12-2022",
-            endDate: "07-06-2024",
-            marks: "60%",
-          },
-          {
-            education: "Phd",
-            institute: "Thapar University",
-            startDate: "08-12-2024",
-            endDate: "07-06-2026",
-            marks: "50%",
           },
         ],
       },
@@ -121,6 +64,8 @@ var myApp = angular
         phone: 9863245781,
         gender: "male",
         age: 23,
+        address: "1234 Main St.",
+        dob: "1997-09-09",
         degrees: [
           {
             education: "Bachelor's degree",
@@ -128,27 +73,6 @@ var myApp = angular
             startDate: "08-12-2018",
             endDate: "07-15-2022",
             marks: "9CGPA",
-          },
-          {
-            education: "High school",
-            institute: "Swami Vivekanand Public School",
-            startDate: "08-12-2005",
-            endDate: "07-06-2017",
-            marks: "10CGPA",
-          },
-          {
-            education: "Post Graduation",
-            institute: "Thapar University",
-            startDate: "08-12-2022",
-            endDate: "07-06-2024",
-            marks: "60%",
-          },
-          {
-            education: "Phd",
-            institute: "Thapar University",
-            startDate: "08-12-2024",
-            endDate: "07-06-2026",
-            marks: "50%",
           },
         ],
       },
@@ -157,7 +81,9 @@ var myApp = angular
         email: "nora@hotmail.com",
         phone: 7892453698,
         gender: "female",
-        age: 23,
+        age: 22,
+        address: "1234 Main St.",
+        dob: "1998-09-07",
         degrees: [
           {
             education: "Bachelor's degree",
@@ -165,27 +91,6 @@ var myApp = angular
             startDate: "08-12-2018",
             endDate: "07-15-2022",
             marks: "9CGPA",
-          },
-          {
-            education: "High school",
-            institute: "Swami Vivekanand Public School",
-            startDate: "08-12-2005",
-            endDate: "07-06-2017",
-            marks: "10CGPA",
-          },
-          {
-            education: "Post Graduation",
-            institute: "Thapar University",
-            startDate: "08-12-2022",
-            endDate: "07-06-2024",
-            marks: "60%",
-          },
-          {
-            education: "Phd",
-            institute: "Thapar University",
-            startDate: "08-12-2024",
-            endDate: "07-06-2026",
-            marks: "50%",
           },
         ],
       },
@@ -195,13 +100,17 @@ var myApp = angular
         phone: 6457847890,
         gender: "male",
         age: 32,
+        address: "1234 Main St.",
+        dob: "1988-09-07",
       },
       {
         name: "Phyllis",
         email: "phyllis@hotmail.com",
         phone: 7457893645,
         gender: "female",
-        age: 30,
+        age: 42,
+        address: "1234 Main St.",
+        dob: "1978-09-07",
       },
       {
         name: "Chris",
@@ -289,7 +198,7 @@ var myApp = angular
       $scope.selectedEmployee = employee;
     };
 
-    // reset form when it is closed
+    // reset form when it is opened
     $scope.resetForm = function () {
       var form = document.querySelector(".needs-validation");
       // reset form
@@ -298,6 +207,10 @@ var myApp = angular
       form.classList.remove("was-validated");
       // qualifications
       $scope.degrees = [];
+      // selected employee
+      $scope.selectedEmployee = {};
+      // calculated age
+      $scope.age = new Date();
     };
 
     // calculate age
@@ -343,7 +256,7 @@ var myApp = angular
 
     // set min date
     $scope.startDate = new Date();
-    $scope.changed = function () {
+    $scope.dateChanged = function () {
       let today = $scope.startDate;
       let dd = today.getDate();
       let mm = today.getMonth() + 1; //January is 0!
@@ -356,6 +269,37 @@ var myApp = angular
       }
       today = yyyy + "-" + mm + "-" + dd;
       document.getElementById("endDate").setAttribute("min", today);
+      document.getElementById("endDate").value = "";
+    };
+
+    // edit user
+    $scope.editUser = function (user) {
+      var form = document.querySelector(".needs-validation");
+      // reset form-styles
+      form.classList.remove("was-validated");
+      if (user.dob) {
+        $scope.age = new Date(user.dob);
+      } else {
+        $scope.age = new Date();
+      }
+      if (user.degrees) {
+        $scope.degrees = user.degrees;
+      }
+    };
+    // delete user
+    $scope.deleteUser = function (user) {
+      $scope.employees.forEach((item, index) => {
+        if (item.phone == user.phone) {
+          $scope.employees.splice(index, 1);
+        }
+      });
+      document.querySelector(".alert-danger").style.display = "block";
+      setTimeout(function () {
+        document.querySelector(".alert-danger").style.display = "none";
+      }, 3000);
+      if ($scope.currentPage == $scope.numberOfPages()) {
+        $scope.currentPage--;
+      }
     };
 
     // form-validation
@@ -370,28 +314,60 @@ var myApp = angular
             event.preventDefault();
             event.stopPropagation();
           } else {
-            $scope.employees.unshift({
-              name: document.getElementById("userName").value,
-              email: document.getElementById("userEmail").value,
-              phone: document.getElementById("userPhone").value,
-              gender: document.getElementById("userGender").value,
-              age: document.getElementById("userAge").textContent,
-              address: document.getElementById("userAddress").value,
-              dob: document.getElementById("dob").value,
-            });
-            // add degree to employee
-            if ($scope.degrees.length >= 1) {
-              $scope.employees[0].degrees = [];
-              $scope.degrees.forEach((element) => {
-                $scope.employees[0].degrees.unshift(element);
+            if ($scope.selectedEmployee.name) {
+              $scope.employees.forEach((item, index) => {
+                if (item.phone == $scope.selectedEmployee.phone) {
+                  $scope.employees[index] = {
+                    name: document.getElementById("userName").value,
+                    email: document.getElementById("userEmail").value,
+                    phone: document.getElementById("userPhone").value,
+                    gender: document.getElementById("userGender").value,
+                    age: document.getElementById("userAge").textContent,
+                    address: document.getElementById("userAddress").value,
+                    dob: document.getElementById("dob").value,
+                  };
+                  // add degree to employee
+                  if ($scope.degrees.length >= 1) {
+                    $scope.employees[index].degrees = [];
+                    $scope.degrees.forEach((element) => {
+                      $scope.employees[index].degrees.unshift(element);
+                    });
+                  }
+                }
               });
+            } else {
+              $scope.employees.unshift({
+                name: document.getElementById("userName").value,
+                email: document.getElementById("userEmail").value,
+                phone: document.getElementById("userPhone").value,
+                gender: document.getElementById("userGender").value,
+                age: document.getElementById("userAge").textContent,
+                address: document.getElementById("userAddress").value,
+                dob: document.getElementById("dob").value,
+              });
+              // add degree to employee
+              if ($scope.degrees.length >= 1) {
+                $scope.employees[0].degrees = [];
+                $scope.degrees.forEach((element) => {
+                  $scope.employees[0].degrees.unshift(element);
+                });
+              }
             }
+
             // close modal & Show success message
+            if ($scope.selectedEmployee.name) {
+              document.querySelector(".alert-info").style.display = "block";
+              setTimeout(function () {
+                document.querySelector(".alert-info").style.display = "none";
+              }, 3000);
+            } else {
+              document.querySelector(".alert-primary").style.display = "block";
+              setTimeout(function () {
+                document.querySelector(".alert-primary").style.display = "none";
+              }, 3000);
+            }
             document.querySelector(".form-modal-close").click();
-            document.querySelector(".alert").classList.toggle("fade");
-            setTimeout(function () {
-              document.querySelector(".alert").classList.add("fade");
-            }, 3000);
+
             return;
           }
           form.classList.add("was-validated");
@@ -428,5 +404,12 @@ myApp.filter("range", function () {
       input.push(i);
     }
     return input;
+  };
+});
+myApp.filter("capitalize", function () {
+  return function (input) {
+    return angular.isString(input) && input.length > 0
+      ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase()
+      : input;
   };
 });
