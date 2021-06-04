@@ -5,6 +5,31 @@ var myApp = angular
     // data
     $scope.employees = [
       {
+        name: "Darpan",
+        email: "darpansheoran@gmail.com",
+        phone: "9050607050",
+        gender: "male",
+        age: "22",
+        address: "1324 Main St.",
+        dob: "1998-09-07",
+        degrees: [
+          {
+            education: "High school",
+            institute: "SVPS",
+            startDate: new Date("2006-06-15"),
+            endDate: new Date("2017-06-12"),
+            marks: "89%",
+          },
+          {
+            education: "Bachelor's degree",
+            institute: "Chitkara University",
+            startDate: new Date("2018-08-13"),
+            endDate: new Date("2022-07-20"),
+            marks: "9CGPA",
+          },
+        ],
+      },
+      {
         name: "Martin",
         email: "martin@patientbond.com",
         phone: 1234567890,
@@ -12,15 +37,6 @@ var myApp = angular
         age: 22,
         address: "1234 Main St.",
         dob: "1998-09-07",
-        degrees: [
-          {
-            education: "Bachelor's degree",
-            institute: "Chitkara University",
-            startDate: "08-12-2018",
-            endDate: "07-15-2022",
-            marks: "9CGPA",
-          },
-        ],
       },
       {
         name: "Harry",
@@ -30,15 +46,6 @@ var myApp = angular
         age: 21,
         address: "1234 Main St.",
         dob: "1999-09-07",
-        degrees: [
-          {
-            education: "Bachelor's degree",
-            institute: "Chitkara University",
-            startDate: "08-12-2018",
-            endDate: "07-15-2022",
-            marks: "9CGPA",
-          },
-        ],
       },
       {
         name: "Pat",
@@ -48,15 +55,6 @@ var myApp = angular
         age: 20,
         address: "1234 Main St.",
         dob: "2000-09-07",
-        degrees: [
-          {
-            education: "Bachelor's degree",
-            institute: "Chitkara University",
-            startDate: "08-12-2018",
-            endDate: "07-15-2022",
-            marks: "9CGPA",
-          },
-        ],
       },
       {
         name: "Alex",
@@ -66,15 +64,6 @@ var myApp = angular
         age: 23,
         address: "1234 Main St.",
         dob: "1997-09-09",
-        degrees: [
-          {
-            education: "Bachelor's degree",
-            institute: "Chitkara University",
-            startDate: "08-12-2018",
-            endDate: "07-15-2022",
-            marks: "9CGPA",
-          },
-        ],
       },
       {
         name: "Nora Smith",
@@ -84,15 +73,6 @@ var myApp = angular
         age: 22,
         address: "1234 Main St.",
         dob: "1998-09-07",
-        degrees: [
-          {
-            education: "Bachelor's degree",
-            institute: "Chitkara University",
-            startDate: "08-12-2018",
-            endDate: "07-15-2022",
-            marks: "9CGPA",
-          },
-        ],
       },
       {
         name: "Joe",
@@ -162,6 +142,7 @@ var myApp = angular
         age: 31,
       },
     ];
+
     $scope.currentPage = 0;
     $scope.pageSize = 5;
     $scope.searchText = "";
@@ -173,6 +154,7 @@ var myApp = angular
     $scope.numberOfPages = function () {
       return Math.ceil($scope.getEmployees().length / $scope.pageSize);
     };
+    // goTo page 1 if searching
     $scope.$watch(
       "searchText",
       function (newValue, oldValue) {
@@ -182,12 +164,31 @@ var myApp = angular
       },
       true
     );
+    // keep track of current page for pagination
     $scope.$watch(
       "currentPage",
       function (newValue, oldValue) {
         let temp = document.querySelectorAll(".page-number");
         temp[oldValue].classList.remove("active");
         temp[newValue].classList.add("active");
+        if (newValue == 0) {
+          document
+            .querySelector(".pagination")
+            .firstElementChild.classList.add("disabled");
+        } else {
+          document
+            .querySelector(".pagination")
+            .firstElementChild.classList.remove("disabled");
+        }
+        if (newValue >= $scope.numberOfPages() - 1) {
+          document
+            .querySelector(".pagination")
+            .lastElementChild.classList.add("disabled");
+        } else {
+          document
+            .querySelector(".pagination")
+            .lastElementChild.classList.remove("disabled");
+        }
       },
       true
     );
@@ -230,17 +231,20 @@ var myApp = angular
       let strt = document.getElementById("startDate").value;
       let end = document.getElementById("endDate").value;
       let marks = document.getElementById("marks").value;
+      // error
       if (edu == "" || inst == "" || strt == "" || end == "" || marks == "") {
         document.getElementById("error").style.display = "block";
         setTimeout(function () {
           document.getElementById("error").style.display = "none";
         }, 2000);
-      } else {
+      }
+      // add degree
+      else {
         $scope.degrees.unshift({
           education: edu,
           institute: inst,
-          startDate: strt,
-          endDate: end,
+          startDate: new Date(strt),
+          endDate: new Date(end),
           marks: marks,
         });
         document.getElementById("education").value = "";
@@ -270,6 +274,22 @@ var myApp = angular
       today = yyyy + "-" + mm + "-" + dd;
       document.getElementById("endDate").setAttribute("min", today);
       document.getElementById("endDate").value = "";
+    };
+    // if user wants to edit date after adding a degree
+    $scope.dateChangeDegree = function (index) {
+      let today = $scope.degrees[index].startDate;
+      let dd = today.getDate();
+      let mm = today.getMonth() + 1; //January is 0!
+      let yyyy = today.getFullYear();
+      if (dd < 10) {
+        dd = "0" + dd;
+      }
+      if (mm < 10) {
+        mm = "0" + mm;
+      }
+      today = yyyy + "-" + mm + "-" + dd;
+      document.getElementById(`endDate-${index}`).setAttribute("min", today);
+      document.getElementById(`endDate-${index}`).value = "";
     };
 
     // edit user
@@ -302,6 +322,22 @@ var myApp = angular
       }
     };
 
+    // format date
+    $scope.getDate = function (date) {
+      let today = date;
+      let dd = today.getDate();
+      let mm = today.getMonth() + 1; //January is 0!
+      let yyyy = today.getFullYear();
+      if (dd < 10) {
+        dd = "0" + dd;
+      }
+      if (mm < 10) {
+        mm = "0" + mm;
+      }
+      today = yyyy + "-" + mm + "-" + dd;
+      return today;
+    };
+
     // form-validation
     (function () {
       "use strict";
@@ -314,6 +350,7 @@ var myApp = angular
             event.preventDefault();
             event.stopPropagation();
           } else {
+            // edit employee in employees
             if ($scope.selectedEmployee.name) {
               $scope.employees.forEach((item, index) => {
                 if (item.phone == $scope.selectedEmployee.phone) {
@@ -335,7 +372,9 @@ var myApp = angular
                   }
                 }
               });
-            } else {
+            }
+            // add new employee
+            else {
               $scope.employees.unshift({
                 name: document.getElementById("userName").value,
                 email: document.getElementById("userEmail").value,
@@ -355,12 +394,15 @@ var myApp = angular
             }
 
             // close modal & Show success message
+            // update message
             if ($scope.selectedEmployee.name) {
               document.querySelector(".alert-info").style.display = "block";
               setTimeout(function () {
                 document.querySelector(".alert-info").style.display = "none";
               }, 3000);
-            } else {
+            }
+            // new user added message
+            else {
               document.querySelector(".alert-primary").style.display = "block";
               setTimeout(function () {
                 document.querySelector(".alert-primary").style.display = "none";
@@ -386,6 +428,7 @@ var myApp = angular
         mm = "0" + mm;
       }
       today = yyyy + "-" + mm + "-" + dd;
+      $scope.today = today;
       document.getElementById("dob").setAttribute("max", today);
       document.getElementById("startDate").setAttribute("max", today);
     })();

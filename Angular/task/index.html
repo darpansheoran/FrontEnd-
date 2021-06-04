@@ -129,13 +129,7 @@
         class="pagination d-flex justify-content-center py-3"
       >
         <!-- previous  button -->
-        <li ng-show="currentPage == 0" class="page-item prev disabled">
-          <a class="page-link" href="#" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <!-- disabled previous  button -->
-        <li ng-show="currentPage != 0" class="page-item prev">
+        <li class="page-item prev">
           <a
             class="page-link"
             href="#"
@@ -149,7 +143,7 @@
         <li class="page-item page-number active" ng-click="goToPage(0)">
           <a class="page-link" href="#">1</a>
         </li>
-        <!-- other links;calc pages and create using ng-repeat -->
+        <!-- pages using ng-repeat -->
         <li
           class="page-item page-number"
           ng-repeat="page in [] | range:numberOfPages()"
@@ -157,25 +151,13 @@
           <a class="page-link" href="#" ng-click="goToPage(page-1)">{{page}}</a>
         </li>
         <!-- next button -->
-        <li
-          ng-show="getEmployees().length/pageSize - 1 > currentPage"
-          class="page-item next"
-        >
+        <li class="page-item next">
           <a
             class="page-link"
             href="#"
             aria-label="Next"
             ng-click="currentPage=currentPage+1"
           >
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-        <!-- disabled next button-->
-        <li
-          ng-show="currentPage >= getEmployees().length/pageSize - 1"
-          class="page-item next disabled"
-        >
-          <a class="page-link" href="#" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
@@ -482,9 +464,11 @@
                       <!-- Start Date -->
                       <div class="col-md-2">
                         <input
-                          type="text"
+                          type="date"
+                          min="1900-01-01"
+                          max="{{today}}"
                           ng-model="degrees[$index].startDate"
-                          placeholder="MM-dd-yyyy"
+                          ng-change="dateChangeDegree($index)"
                           class="form-control"
                           required
                         />
@@ -492,10 +476,12 @@
                       <!-- End Date -->
                       <div class="col-md-2">
                         <input
-                          type="text"
+                          type="date"
+                          min=""
+                          max=""
                           ng-model="degrees[$index].endDate"
-                          placeholder="MM-dd-yyyy"
                           class="form-control"
+                          id="endDate-{{$index}}"
                           required
                         />
                       </div>
@@ -643,15 +629,25 @@
                       No data Available
                     </div>
                     <div
-                      class="row py-2 text-start"
+                      class="row py-2 text-start degree-info"
                       ng-repeat="degree in selectedEmployee.degrees"
                     >
-                      <p>
-                        {{degree.education}} from {{degree.institute}}
-                        ({{degree.startDate}} to {{degree.endDate}}). Scoring
-                        {{degree.marks}}
-                      </p>
+                      <div class="col fw-bolder ps-4">
+                        <p>Degree:</p>
+                        <p>Institute:</p>
+                        <p>Start Date:</p>
+                        <p>End Date:</p>
+                        <p>Marks:</p>
+                      </div>
+                      <div class="col">
+                        <p>{{degree.education}}</p>
+                        <p>{{degree.institute}}</p>
+                        <p>{{getDate(degree.startDate)}}</p>
+                        <p>{{getDate(degree.endDate)}}</p>
+                        <p>{{degree.marks}}</p>
+                      </div>
                     </div>
+                    <div style="height: 30px"></div>
                     <i
                       class="fas fa-arrow-left fs-5 pt-3 position-absolute"
                       data-bs-target="#carousel"
@@ -682,6 +678,8 @@
                 class="btn btn-outline-danger"
                 data-bs-dismiss="modal"
                 ng-click="deleteUser(selectedEmployee)"
+                data-bs-target="#carousel"
+                data-bs-slide-to="0"
               >
                 Delete
               </button>
@@ -721,7 +719,7 @@
       "
     >
       <p>&copy;Patientbond 2021</p>
-      <img src="img/PB_LOGO_041718_Small.svg" alt="logo" style="height: 58px" />
+      <img src="img/PB_LOGO_041718_Small.svg" alt="logo" height="58px" />
     </footer>
 
     <script src="app.js"></script>
