@@ -16,6 +16,13 @@
     />
     <!-- Angular -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.2/angular.min.js"></script>
+    <!-- loadash -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"
+      integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
   </head>
   <body ng-app="myModule">
     <!-- top-bar -->
@@ -67,7 +74,7 @@
               <a
                 class="dropdown-item"
                 href="#"
-                ng-click="pageSize=5;currentPage = 0"
+                ng-click="pageSize=5;setPage(1,5)"
                 >5</a
               >
             </li>
@@ -75,7 +82,7 @@
               <a
                 class="dropdown-item"
                 href="#"
-                ng-click="pageSize=10;currentPage = 0"
+                ng-click="pageSize=10;setPage(1,10)"
                 >10</a
               >
             </li>
@@ -83,7 +90,7 @@
               <a
                 class="dropdown-item"
                 href="#"
-                ng-click="pageSize=15;currentPage = 0"
+                ng-click="pageSize=15;setPage(1,15)"
                 >15</a
               >
             </li>
@@ -94,9 +101,9 @@
       <div class="table-responsive px-3">
         <table class="table table-hover table-bordered">
           <caption>
-            {{((currentPage)*pageSize)+1}}-{{(((currentPage+1)*pageSize) >
-            getEmployees().length) ? getEmployees().length :
-            ((currentPage+1)*pageSize)}} out of {{getEmployees().length}}
+            {{((pager.currentPage-1)*pager.pageSize)+1}}-{{(pager.currentPage*pager.pageSize
+            > pager.totalItems ? pager.totalItems :
+            pager.currentPage*pager.pageSize)}} out of {{pager.totalItems}}
           </caption>
           <thead>
             <tr>
@@ -112,7 +119,7 @@
               ng-click="setEmployee(employee)"
               data-bs-toggle="modal"
               data-bs-target="#completeDetails"
-              ng-repeat="employee in employees | filter:searchText | startFrom:currentPage*pageSize | limitTo:pageSize"
+              ng-repeat="employee in employees |filter:searchText "
             >
               <td>{{employee.name}}</td>
               <td>{{employee.email}}</td>
@@ -125,41 +132,46 @@
       </div>
       <!-- pagination -->
       <ul
-        ng-show="numberOfPages() > 1"
+        ng-if="pager.pages.length"
         class="pagination d-flex justify-content-center py-3"
       >
-        <!-- previous  button -->
-        <li class="page-item prev">
-          <a
-            class="page-link"
-            href="#"
-            aria-label="Previous"
-            ng-click="currentPage=currentPage-1"
-          >
-            <span aria-hidden="true">&laquo;</span>
-          </a>
+        <li ng-class="{disabled:pager.currentPage === 1}" class="page-item">
+          <a class="page-link" ng-click="setPage(1,pageSize)">First</a>
         </li>
-        <!-- first link will be active -->
-        <li class="page-item page-number active" ng-click="goToPage(0)">
-          <a class="page-link" href="#">1</a>
-        </li>
-        <!-- pages using ng-repeat -->
         <li
-          class="page-item page-number"
-          ng-repeat="page in [] | range:numberOfPages()"
+          ng-class="{disabled:pager.currentPage === 1}"
+          class="page-item prev"
         >
-          <a class="page-link" href="#" ng-click="goToPage(page-1)">{{page}}</a>
-        </li>
-        <!-- next button -->
-        <li class="page-item next">
           <a
             class="page-link"
-            href="#"
-            aria-label="Next"
-            ng-click="currentPage=currentPage+1"
+            ng-click="setPage(pager.currentPage - 1,pageSize)"
+            ><span aria-hidden="true">&laquo;</span></a
           >
-            <span aria-hidden="true">&raquo;</span>
-          </a>
+        </li>
+        <li
+          ng-repeat="page in pager.pages"
+          ng-class="{active:pager.currentPage === page}"
+          class="page-item"
+        >
+          <a class="page-link" ng-click="setPage(page,pageSize)">{{page}}</a>
+        </li>
+        <li
+          ng-class="{disabled:pager.currentPage === pager.totalPages}"
+          class="page-item next"
+        >
+          <a
+            class="page-link"
+            ng-click="setPage(pager.currentPage + 1,pageSize)"
+            ><span aria-hidden="true">&raquo;</span></a
+          >
+        </li>
+        <li
+          ng-class="{disabled:pager.currentPage === pager.totalPages}"
+          class="page-item"
+        >
+          <a class="page-link" ng-click="setPage(pager.totalPages,pageSize)"
+            >Last</a
+          >
         </li>
       </ul>
       <!-- Modal form -->

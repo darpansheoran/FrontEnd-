@@ -3,6 +3,9 @@ body {
   height: 100%;
   text-align: center;
 }
+a {
+  cursor: pointer;
+}
 .showcase {
   min-height: calc(100vh - 110px);
 }

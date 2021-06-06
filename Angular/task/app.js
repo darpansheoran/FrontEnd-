@@ -1,9 +1,8 @@
 // create a module (myApp); create controller(myController) & register controller with module.
 var myApp = angular
   .module("myModule", [])
-  .controller("myController", function ($scope, $filter) {
-    // data
-    $scope.employees = [
+  .controller("myController", function ($scope, $filter, PagerService) {
+    $scope.data = [
       {
         name: "Darpan",
         email: "darpansheoran@gmail.com",
@@ -141,65 +140,504 @@ var myApp = angular
         gender: "male",
         age: 31,
       },
+      {
+        name: "Martin",
+        email: "martin@patientbond.com",
+        phone: 1234567890,
+        gender: "male",
+        age: 22,
+        address: "1234 Main St.",
+        dob: "1998-09-07",
+      },
+      {
+        name: "Harry",
+        email: "harry@hotmail.com",
+        phone: 4576981245,
+        gender: "male",
+        age: 21,
+        address: "1234 Main St.",
+        dob: "1999-09-07",
+      },
+      {
+        name: "Pat",
+        email: "pat@hotmail.com",
+        phone: 5483695124,
+        gender: "male",
+        age: 20,
+        address: "1234 Main St.",
+        dob: "2000-09-07",
+      },
+      {
+        name: "Alex",
+        email: "alex@hotmail.com",
+        phone: 9863245781,
+        gender: "male",
+        age: 23,
+        address: "1234 Main St.",
+        dob: "1997-09-09",
+      },
+      {
+        name: "Nora Smith",
+        email: "nora@hotmail.com",
+        phone: 7892453698,
+        gender: "female",
+        age: 22,
+        address: "1234 Main St.",
+        dob: "1998-09-07",
+      },
+      {
+        name: "Joe",
+        email: "joe@patientbond.com",
+        phone: 6457847890,
+        gender: "male",
+        age: 32,
+        address: "1234 Main St.",
+        dob: "1988-09-07",
+      },
+      {
+        name: "Phyllis",
+        email: "phyllis@hotmail.com",
+        phone: 7457893645,
+        gender: "female",
+        age: 42,
+        address: "1234 Main St.",
+        dob: "1978-09-07",
+      },
+      {
+        name: "Chris",
+        email: "chris@hotmail.com",
+        phone: 5111115124,
+        gender: "male",
+        age: 28,
+      },
+      {
+        name: "Dwight",
+        email: "dwight@hotmail.com",
+        phone: 9878457781,
+        gender: "male",
+        age: 29,
+      },
+      {
+        name: "Emily",
+        email: "emily@hotmail.com",
+        phone: 7110003698,
+        gender: "female",
+        age: 20,
+      },
+      {
+        name: "Abdul",
+        email: "abdul@patientbond.com",
+        phone: 1787877890,
+        gender: "male",
+        age: 35,
+      },
+      {
+        name: "David",
+        email: "dav@hotmail.com",
+        phone: 4444481245,
+        gender: "male",
+        age: 33,
+      },
+      {
+        name: "Monica",
+        email: "mon@hotmail.com",
+        phone: 7895695124,
+        gender: "female",
+        age: 27,
+      },
+      {
+        name: "Andy",
+        email: "ndy@hotmail.com",
+        phone: 4789453698,
+        gender: "male",
+        age: 31,
+      },
+      {
+        name: "Martin",
+        email: "martin@patientbond.com",
+        phone: 1234567890,
+        gender: "male",
+        age: 22,
+        address: "1234 Main St.",
+        dob: "1998-09-07",
+      },
+      {
+        name: "Harry",
+        email: "harry@hotmail.com",
+        phone: 4576981245,
+        gender: "male",
+        age: 21,
+        address: "1234 Main St.",
+        dob: "1999-09-07",
+      },
+      {
+        name: "Pat",
+        email: "pat@hotmail.com",
+        phone: 5483695124,
+        gender: "male",
+        age: 20,
+        address: "1234 Main St.",
+        dob: "2000-09-07",
+      },
+      {
+        name: "Alex",
+        email: "alex@hotmail.com",
+        phone: 9863245781,
+        gender: "male",
+        age: 23,
+        address: "1234 Main St.",
+        dob: "1997-09-09",
+      },
+      {
+        name: "Nora Smith",
+        email: "nora@hotmail.com",
+        phone: 7892453698,
+        gender: "female",
+        age: 22,
+        address: "1234 Main St.",
+        dob: "1998-09-07",
+      },
+      {
+        name: "Joe",
+        email: "joe@patientbond.com",
+        phone: 6457847890,
+        gender: "male",
+        age: 32,
+        address: "1234 Main St.",
+        dob: "1988-09-07",
+      },
+      {
+        name: "Phyllis",
+        email: "phyllis@hotmail.com",
+        phone: 7457893645,
+        gender: "female",
+        age: 42,
+        address: "1234 Main St.",
+        dob: "1978-09-07",
+      },
+      {
+        name: "Chris",
+        email: "chris@hotmail.com",
+        phone: 5111115124,
+        gender: "male",
+        age: 28,
+      },
+      {
+        name: "Dwight",
+        email: "dwight@hotmail.com",
+        phone: 9878457781,
+        gender: "male",
+        age: 29,
+      },
+      {
+        name: "Emily",
+        email: "emily@hotmail.com",
+        phone: 7110003698,
+        gender: "female",
+        age: 20,
+      },
+      {
+        name: "Abdul",
+        email: "abdul@patientbond.com",
+        phone: 1787877890,
+        gender: "male",
+        age: 35,
+      },
+      {
+        name: "David",
+        email: "dav@hotmail.com",
+        phone: 4444481245,
+        gender: "male",
+        age: 33,
+      },
+      {
+        name: "Monica",
+        email: "mon@hotmail.com",
+        phone: 7895695124,
+        gender: "female",
+        age: 27,
+      },
+      {
+        name: "Andy",
+        email: "ndy@hotmail.com",
+        phone: 4789453698,
+        gender: "male",
+        age: 31,
+      },
+      {
+        name: "Martin",
+        email: "martin@patientbond.com",
+        phone: 1234567890,
+        gender: "male",
+        age: 22,
+        address: "1234 Main St.",
+        dob: "1998-09-07",
+      },
+      {
+        name: "Harry",
+        email: "harry@hotmail.com",
+        phone: 4576981245,
+        gender: "male",
+        age: 21,
+        address: "1234 Main St.",
+        dob: "1999-09-07",
+      },
+      {
+        name: "Pat",
+        email: "pat@hotmail.com",
+        phone: 5483695124,
+        gender: "male",
+        age: 20,
+        address: "1234 Main St.",
+        dob: "2000-09-07",
+      },
+      {
+        name: "Alex",
+        email: "alex@hotmail.com",
+        phone: 9863245781,
+        gender: "male",
+        age: 23,
+        address: "1234 Main St.",
+        dob: "1997-09-09",
+      },
+      {
+        name: "Nora Smith",
+        email: "nora@hotmail.com",
+        phone: 7892453698,
+        gender: "female",
+        age: 22,
+        address: "1234 Main St.",
+        dob: "1998-09-07",
+      },
+      {
+        name: "Joe",
+        email: "joe@patientbond.com",
+        phone: 6457847890,
+        gender: "male",
+        age: 32,
+        address: "1234 Main St.",
+        dob: "1988-09-07",
+      },
+      {
+        name: "Phyllis",
+        email: "phyllis@hotmail.com",
+        phone: 7457893645,
+        gender: "female",
+        age: 42,
+        address: "1234 Main St.",
+        dob: "1978-09-07",
+      },
+      {
+        name: "Chris",
+        email: "chris@hotmail.com",
+        phone: 5111115124,
+        gender: "male",
+        age: 28,
+      },
+      {
+        name: "Dwight",
+        email: "dwight@hotmail.com",
+        phone: 9878457781,
+        gender: "male",
+        age: 29,
+      },
+      {
+        name: "Emily",
+        email: "emily@hotmail.com",
+        phone: 7110003698,
+        gender: "female",
+        age: 20,
+      },
+      {
+        name: "Abdul",
+        email: "abdul@patientbond.com",
+        phone: 1787877890,
+        gender: "male",
+        age: 35,
+      },
+      {
+        name: "David",
+        email: "dav@hotmail.com",
+        phone: 4444481245,
+        gender: "male",
+        age: 33,
+      },
+      {
+        name: "Monica",
+        email: "mon@hotmail.com",
+        phone: 7895695124,
+        gender: "female",
+        age: 27,
+      },
+      {
+        name: "Andy",
+        email: "ndy@hotmail.com",
+        phone: 4789453698,
+        gender: "male",
+        age: 31,
+      },
+      {
+        name: "Martin",
+        email: "martin@patientbond.com",
+        phone: 1234567890,
+        gender: "male",
+        age: 22,
+        address: "1234 Main St.",
+        dob: "1998-09-07",
+      },
+      {
+        name: "Harry",
+        email: "harry@hotmail.com",
+        phone: 4576981245,
+        gender: "male",
+        age: 21,
+        address: "1234 Main St.",
+        dob: "1999-09-07",
+      },
+      {
+        name: "Pat",
+        email: "pat@hotmail.com",
+        phone: 5483695124,
+        gender: "male",
+        age: 20,
+        address: "1234 Main St.",
+        dob: "2000-09-07",
+      },
+      {
+        name: "Alex",
+        email: "alex@hotmail.com",
+        phone: 9863245781,
+        gender: "male",
+        age: 23,
+        address: "1234 Main St.",
+        dob: "1997-09-09",
+      },
+      {
+        name: "Nora Smith",
+        email: "nora@hotmail.com",
+        phone: 7892453698,
+        gender: "female",
+        age: 22,
+        address: "1234 Main St.",
+        dob: "1998-09-07",
+      },
+      {
+        name: "Joe",
+        email: "joe@patientbond.com",
+        phone: 6457847890,
+        gender: "male",
+        age: 32,
+        address: "1234 Main St.",
+        dob: "1988-09-07",
+      },
+      {
+        name: "Phyllis",
+        email: "phyllis@hotmail.com",
+        phone: 7457893645,
+        gender: "female",
+        age: 42,
+        address: "1234 Main St.",
+        dob: "1978-09-07",
+      },
+      {
+        name: "Chris",
+        email: "chris@hotmail.com",
+        phone: 5111115124,
+        gender: "male",
+        age: 28,
+      },
+      {
+        name: "Dwight",
+        email: "dwight@hotmail.com",
+        phone: 9878457781,
+        gender: "male",
+        age: 29,
+      },
+      {
+        name: "Emily",
+        email: "emily@hotmail.com",
+        phone: 7110003698,
+        gender: "female",
+        age: 20,
+      },
+      {
+        name: "Abdul",
+        email: "abdul@patientbond.com",
+        phone: 1787877890,
+        gender: "male",
+        age: 35,
+      },
+      {
+        name: "David",
+        email: "dav@hotmail.com",
+        phone: 4444481245,
+        gender: "male",
+        age: 33,
+      },
+      {
+        name: "Monica",
+        email: "mon@hotmail.com",
+        phone: 7895695124,
+        gender: "female",
+        age: 27,
+      },
+      {
+        name: "Andy",
+        email: "ndy@hotmail.com",
+        phone: 4789453698,
+        gender: "male",
+        age: 31,
+      },
     ];
-
-    $scope.currentPage = 0;
+    // for-pagination
+    $scope.pager = {};
+    $scope.setPage = setPage;
     $scope.pageSize = 5;
+
+    initController();
+
+    function initController() {
+      // initialize to page 1
+      $scope.setPage(1);
+    }
+
+    function setPage(page, pageSize = 5) {
+      if (page < 1 || page > $scope.pager.totalPages) {
+        return;
+      }
+      // get pager object from service
+      $scope.pager = PagerService.GetPager(
+        $filter("filter")($scope.data, $scope.searchText).length,
+        page,
+        pageSize
+      );
+
+      // get current page of items
+      $scope.employees = $filter("filter")(
+        $scope.data,
+        $scope.searchText
+      ).slice($scope.pager.startIndex, $scope.pager.endIndex + 1);
+    }
+
     $scope.searchText = "";
     $scope.selectedEmployee = {};
-    $scope.getEmployees = function () {
-      return $filter("filter")($scope.employees, $scope.searchText);
-    };
 
-    $scope.numberOfPages = function () {
-      return Math.ceil($scope.getEmployees().length / $scope.pageSize);
-    };
     // goTo page 1 if searching
     $scope.$watch(
       "searchText",
       function (newValue, oldValue) {
         if (oldValue != newValue) {
-          $scope.currentPage = 0;
+          $scope.setPage(1);
         }
       },
       true
     );
-    // keep track of current page for pagination
-    $scope.$watch(
-      "currentPage",
-      function (newValue, oldValue) {
-        let temp = document.querySelectorAll(".page-number");
-        temp[oldValue].classList.remove("active");
-        temp[newValue].classList.add("active");
-        if (newValue == 0) {
-          document
-            .querySelector(".pagination")
-            .firstElementChild.classList.add("disabled");
-        } else {
-          document
-            .querySelector(".pagination")
-            .firstElementChild.classList.remove("disabled");
-        }
-        if (newValue >= $scope.numberOfPages() - 1) {
-          document
-            .querySelector(".pagination")
-            .lastElementChild.classList.add("disabled");
-        } else {
-          document
-            .querySelector(".pagination")
-            .lastElementChild.classList.remove("disabled");
-        }
-      },
-      true
-    );
-    $scope.goToPage = function (page) {
-      $scope.currentPage = page;
-    };
+
     $scope.setEmployee = function (employee) {
       $scope.selectedEmployee = employee;
     };
 
-    // reset form when it is opened
+    // reset form when it is opened/closed
     $scope.resetForm = function () {
       var form = document.querySelector(".needs-validation");
       // reset form
@@ -433,26 +871,69 @@ var myApp = angular
       document.getElementById("startDate").setAttribute("max", today);
     })();
   });
-myApp.filter("startFrom", function () {
-  return function (input, start) {
-    start = +start;
-    return input.slice(start);
-  };
-});
-myApp.filter("range", function () {
-  // RETURNS ARRAY FOR RANGE IN NG-REPEAT
-  return function (input, total) {
-    total = parseInt(total);
-    for (var i = 2; i <= total; i++) {
-      input.push(i);
-    }
-    return input;
-  };
-});
 myApp.filter("capitalize", function () {
   return function (input) {
     return angular.isString(input) && input.length > 0
       ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase()
       : input;
   };
+});
+myApp.factory("PagerService", function PagerService() {
+  // service definition
+  var service = {};
+
+  service.GetPager = GetPager;
+
+  return service;
+
+  // service implementation
+  function GetPager(totalItems, currentPage, pageSize) {
+    // default to first page
+    currentPage = currentPage || 1;
+
+    // default page size is 5
+    pageSize = pageSize || 5;
+
+    // calculate total pages
+    var totalPages = Math.ceil(totalItems / pageSize);
+
+    var startPage, endPage;
+    if (totalPages <= 10) {
+      // less than 10 total pages so show all
+      startPage = 1;
+      endPage = totalPages;
+    } else {
+      // more than 10 total pages so calculate start and end pages
+      if (currentPage <= 6) {
+        startPage = 1;
+        endPage = 10;
+      } else if (currentPage + 4 >= totalPages) {
+        startPage = totalPages - 9;
+        endPage = totalPages;
+      } else {
+        startPage = currentPage - 5;
+        endPage = currentPage + 4;
+      }
+    }
+
+    // calculate start and end item indexes
+    var startIndex = (currentPage - 1) * pageSize;
+    var endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
+
+    // create an array of pages to ng-repeat in the pager control
+    var pages = _.range(startPage, endPage + 1);
+
+    // return object with all pager properties required by the view
+    return {
+      totalItems: totalItems,
+      currentPage: currentPage,
+      pageSize: pageSize,
+      totalPages: totalPages,
+      startPage: startPage,
+      endPage: endPage,
+      startIndex: startIndex,
+      endIndex: endIndex,
+      pages: pages,
+    };
+  }
 });
