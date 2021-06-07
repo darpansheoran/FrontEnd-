@@ -1,14 +1,80 @@
 // create a module (myApp); create controller(myController) & register controller with module.
 var myApp = angular
   .module("myModule", [])
+  .filter("capitalize", function () {
+    return function (input) {
+      return angular.isString(input) && input.length > 0
+        ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase()
+        : input;
+    };
+  })
+  .factory("PagerService", function PagerService() {
+    // service definition
+    var service = {};
+
+    service.GetPager = GetPager;
+
+    return service;
+
+    // service implementation
+    function GetPager(totalItems, currentPage, pageSize) {
+      // default to first page
+      currentPage = currentPage || 1;
+
+      // default page size is 5
+      pageSize = pageSize || 5;
+
+      // calculate total pages
+      var totalPages = Math.ceil(totalItems / pageSize);
+
+      var startPage, endPage;
+      if (totalPages <= 10) {
+        // less than 10 total pages so show all
+        startPage = 1;
+        endPage = totalPages;
+      } else {
+        // more than 10 total pages so calculate start and end pages
+        if (currentPage <= 6) {
+          startPage = 1;
+          endPage = 10;
+        } else if (currentPage + 4 >= totalPages) {
+          startPage = totalPages - 9;
+          endPage = totalPages;
+        } else {
+          startPage = currentPage - 5;
+          endPage = currentPage + 4;
+        }
+      }
+
+      // calculate start and end item indexes
+      var startIndex = (currentPage - 1) * pageSize;
+      var endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
+
+      // create an array of pages to ng-repeat in the pager control
+      var pages = _.range(startPage, endPage + 1);
+
+      // return object with all pager properties required by the view
+      return {
+        totalItems: totalItems,
+        currentPage: currentPage,
+        pageSize: pageSize,
+        totalPages: totalPages,
+        startPage: startPage,
+        endPage: endPage,
+        startIndex: startIndex,
+        endIndex: endIndex,
+        pages: pages,
+      };
+    }
+  })
   .controller("myController", function ($scope, $filter, PagerService) {
     $scope.data = [
       {
         name: "Darpan",
         email: "darpansheoran@gmail.com",
-        phone: "9050607050",
+        phone: 9050607050,
         gender: "male",
-        age: "22",
+        age: 22,
         address: "1324 Main St.",
         dob: "1998-09-07",
         degrees: [
@@ -143,7 +209,7 @@ var myApp = angular
       {
         name: "Martin",
         email: "martin@patientbond.com",
-        phone: 1234567890,
+        phone: 1234567891,
         gender: "male",
         age: 22,
         address: "1234 Main St.",
@@ -152,7 +218,7 @@ var myApp = angular
       {
         name: "Harry",
         email: "harry@hotmail.com",
-        phone: 4576981245,
+        phone: 4576981240,
         gender: "male",
         age: 21,
         address: "1234 Main St.",
@@ -161,7 +227,7 @@ var myApp = angular
       {
         name: "Pat",
         email: "pat@hotmail.com",
-        phone: 5483695124,
+        phone: 5483695125,
         gender: "male",
         age: 20,
         address: "1234 Main St.",
@@ -170,7 +236,7 @@ var myApp = angular
       {
         name: "Alex",
         email: "alex@hotmail.com",
-        phone: 9863245781,
+        phone: 9863245782,
         gender: "male",
         age: 23,
         address: "1234 Main St.",
@@ -179,7 +245,7 @@ var myApp = angular
       {
         name: "Nora Smith",
         email: "nora@hotmail.com",
-        phone: 7892453698,
+        phone: 7892453690,
         gender: "female",
         age: 22,
         address: "1234 Main St.",
@@ -188,7 +254,7 @@ var myApp = angular
       {
         name: "Joe",
         email: "joe@patientbond.com",
-        phone: 6457847890,
+        phone: 6457847891,
         gender: "male",
         age: 32,
         address: "1234 Main St.",
@@ -197,7 +263,7 @@ var myApp = angular
       {
         name: "Phyllis",
         email: "phyllis@hotmail.com",
-        phone: 7457893645,
+        phone: 7457893646,
         gender: "female",
         age: 42,
         address: "1234 Main St.",
@@ -206,56 +272,56 @@ var myApp = angular
       {
         name: "Chris",
         email: "chris@hotmail.com",
-        phone: 5111115124,
+        phone: 5111115120,
         gender: "male",
         age: 28,
       },
       {
         name: "Dwight",
         email: "dwight@hotmail.com",
-        phone: 9878457781,
+        phone: 9878457782,
         gender: "male",
         age: 29,
       },
       {
         name: "Emily",
         email: "emily@hotmail.com",
-        phone: 7110003698,
+        phone: 7110003690,
         gender: "female",
         age: 20,
       },
       {
         name: "Abdul",
         email: "abdul@patientbond.com",
-        phone: 1787877890,
+        phone: 1787877891,
         gender: "male",
         age: 35,
       },
       {
         name: "David",
         email: "dav@hotmail.com",
-        phone: 4444481245,
+        phone: 4444481246,
         gender: "male",
         age: 33,
       },
       {
         name: "Monica",
         email: "mon@hotmail.com",
-        phone: 7895695124,
+        phone: 7895695129,
         gender: "female",
         age: 27,
       },
       {
         name: "Andy",
         email: "ndy@hotmail.com",
-        phone: 4789453698,
+        phone: 4789153698,
         gender: "male",
         age: 31,
       },
       {
         name: "Martin",
         email: "martin@patientbond.com",
-        phone: 1234567890,
+        phone: 1234567892,
         gender: "male",
         age: 22,
         address: "1234 Main St.",
@@ -264,7 +330,7 @@ var myApp = angular
       {
         name: "Harry",
         email: "harry@hotmail.com",
-        phone: 4576981245,
+        phone: 4576981241,
         gender: "male",
         age: 21,
         address: "1234 Main St.",
@@ -273,7 +339,7 @@ var myApp = angular
       {
         name: "Pat",
         email: "pat@hotmail.com",
-        phone: 5483695124,
+        phone: 5483695126,
         gender: "male",
         age: 20,
         address: "1234 Main St.",
@@ -282,7 +348,7 @@ var myApp = angular
       {
         name: "Alex",
         email: "alex@hotmail.com",
-        phone: 9863245781,
+        phone: 9863245783,
         gender: "male",
         age: 23,
         address: "1234 Main St.",
@@ -291,7 +357,7 @@ var myApp = angular
       {
         name: "Nora Smith",
         email: "nora@hotmail.com",
-        phone: 7892453698,
+        phone: 7892453691,
         gender: "female",
         age: 22,
         address: "1234 Main St.",
@@ -300,7 +366,7 @@ var myApp = angular
       {
         name: "Joe",
         email: "joe@patientbond.com",
-        phone: 6457847890,
+        phone: 6457847892,
         gender: "male",
         age: 32,
         address: "1234 Main St.",
@@ -309,7 +375,7 @@ var myApp = angular
       {
         name: "Phyllis",
         email: "phyllis@hotmail.com",
-        phone: 7457893645,
+        phone: 7457893647,
         gender: "female",
         age: 42,
         address: "1234 Main St.",
@@ -318,56 +384,56 @@ var myApp = angular
       {
         name: "Chris",
         email: "chris@hotmail.com",
-        phone: 5111115124,
+        phone: 5111115122,
         gender: "male",
         age: 28,
       },
       {
         name: "Dwight",
         email: "dwight@hotmail.com",
-        phone: 9878457781,
+        phone: 9878457789,
         gender: "male",
         age: 29,
       },
       {
         name: "Emily",
         email: "emily@hotmail.com",
-        phone: 7110003698,
+        phone: 7110003691,
         gender: "female",
         age: 20,
       },
       {
         name: "Abdul",
         email: "abdul@patientbond.com",
-        phone: 1787877890,
+        phone: 1787877892,
         gender: "male",
         age: 35,
       },
       {
         name: "David",
         email: "dav@hotmail.com",
-        phone: 4444481245,
+        phone: 4444481247,
         gender: "male",
         age: 33,
       },
       {
         name: "Monica",
         email: "mon@hotmail.com",
-        phone: 7895695124,
+        phone: 7895695125,
         gender: "female",
         age: 27,
       },
       {
         name: "Andy",
         email: "ndy@hotmail.com",
-        phone: 4789453698,
+        phone: 4789493698,
         gender: "male",
         age: 31,
       },
       {
         name: "Martin",
         email: "martin@patientbond.com",
-        phone: 1234567890,
+        phone: 1234567893,
         gender: "male",
         age: 22,
         address: "1234 Main St.",
@@ -376,7 +442,7 @@ var myApp = angular
       {
         name: "Harry",
         email: "harry@hotmail.com",
-        phone: 4576981245,
+        phone: 4576981242,
         gender: "male",
         age: 21,
         address: "1234 Main St.",
@@ -385,7 +451,7 @@ var myApp = angular
       {
         name: "Pat",
         email: "pat@hotmail.com",
-        phone: 5483695124,
+        phone: 5483695127,
         gender: "male",
         age: 20,
         address: "1234 Main St.",
@@ -394,7 +460,7 @@ var myApp = angular
       {
         name: "Alex",
         email: "alex@hotmail.com",
-        phone: 9863245781,
+        phone: 9863245784,
         gender: "male",
         age: 23,
         address: "1234 Main St.",
@@ -403,7 +469,7 @@ var myApp = angular
       {
         name: "Nora Smith",
         email: "nora@hotmail.com",
-        phone: 7892453698,
+        phone: 7892453693,
         gender: "female",
         age: 22,
         address: "1234 Main St.",
@@ -412,7 +478,7 @@ var myApp = angular
       {
         name: "Joe",
         email: "joe@patientbond.com",
-        phone: 6457847890,
+        phone: 6457847893,
         gender: "male",
         age: 32,
         address: "1234 Main St.",
@@ -421,7 +487,7 @@ var myApp = angular
       {
         name: "Phyllis",
         email: "phyllis@hotmail.com",
-        phone: 7457893645,
+        phone: 7457893648,
         gender: "female",
         age: 42,
         address: "1234 Main St.",
@@ -430,56 +496,56 @@ var myApp = angular
       {
         name: "Chris",
         email: "chris@hotmail.com",
-        phone: 5111115124,
+        phone: 5111115125,
         gender: "male",
         age: 28,
       },
       {
         name: "Dwight",
         email: "dwight@hotmail.com",
-        phone: 9878457781,
+        phone: 9878457788,
         gender: "male",
         age: 29,
       },
       {
         name: "Emily",
         email: "emily@hotmail.com",
-        phone: 7110003698,
+        phone: 7110003692,
         gender: "female",
         age: 20,
       },
       {
         name: "Abdul",
         email: "abdul@patientbond.com",
-        phone: 1787877890,
+        phone: 1787877893,
         gender: "male",
         age: 35,
       },
       {
         name: "David",
         email: "dav@hotmail.com",
-        phone: 4444481245,
+        phone: 4444481248,
         gender: "male",
         age: 33,
       },
       {
         name: "Monica",
         email: "mon@hotmail.com",
-        phone: 7895695124,
+        phone: 7898695124,
         gender: "female",
         age: 27,
       },
       {
         name: "Andy",
         email: "ndy@hotmail.com",
-        phone: 4789453698,
+        phone: 4789253698,
         gender: "male",
         age: 31,
       },
       {
         name: "Martin",
         email: "martin@patientbond.com",
-        phone: 1234567890,
+        phone: 1234567894,
         gender: "male",
         age: 22,
         address: "1234 Main St.",
@@ -488,7 +554,7 @@ var myApp = angular
       {
         name: "Harry",
         email: "harry@hotmail.com",
-        phone: 4576981245,
+        phone: 4576981243,
         gender: "male",
         age: 21,
         address: "1234 Main St.",
@@ -497,7 +563,7 @@ var myApp = angular
       {
         name: "Pat",
         email: "pat@hotmail.com",
-        phone: 5483695124,
+        phone: 5483695128,
         gender: "male",
         age: 20,
         address: "1234 Main St.",
@@ -506,7 +572,7 @@ var myApp = angular
       {
         name: "Alex",
         email: "alex@hotmail.com",
-        phone: 9863245781,
+        phone: 9863245785,
         gender: "male",
         age: 23,
         address: "1234 Main St.",
@@ -515,7 +581,7 @@ var myApp = angular
       {
         name: "Nora Smith",
         email: "nora@hotmail.com",
-        phone: 7892453698,
+        phone: 7892453695,
         gender: "female",
         age: 22,
         address: "1234 Main St.",
@@ -524,7 +590,7 @@ var myApp = angular
       {
         name: "Joe",
         email: "joe@patientbond.com",
-        phone: 6457847890,
+        phone: 6457847894,
         gender: "male",
         age: 32,
         address: "1234 Main St.",
@@ -533,7 +599,7 @@ var myApp = angular
       {
         name: "Phyllis",
         email: "phyllis@hotmail.com",
-        phone: 7457893645,
+        phone: 7457893649,
         gender: "female",
         age: 42,
         address: "1234 Main St.",
@@ -542,49 +608,49 @@ var myApp = angular
       {
         name: "Chris",
         email: "chris@hotmail.com",
-        phone: 5111115124,
+        phone: 5111115128,
         gender: "male",
         age: 28,
       },
       {
         name: "Dwight",
         email: "dwight@hotmail.com",
-        phone: 9878457781,
+        phone: 9878457787,
         gender: "male",
         age: 29,
       },
       {
         name: "Emily",
         email: "emily@hotmail.com",
-        phone: 7110003698,
+        phone: 7110003693,
         gender: "female",
         age: 20,
       },
       {
         name: "Abdul",
         email: "abdul@patientbond.com",
-        phone: 1787877890,
+        phone: 1787877894,
         gender: "male",
         age: 35,
       },
       {
         name: "David",
         email: "dav@hotmail.com",
-        phone: 4444481245,
+        phone: 4444481249,
         gender: "male",
         age: 33,
       },
       {
         name: "Monica",
         email: "mon@hotmail.com",
-        phone: 7895695124,
+        phone: 7895695724,
         gender: "female",
         age: 27,
       },
       {
         name: "Andy",
         email: "ndy@hotmail.com",
-        phone: 4789453698,
+        phone: 4789453608,
         gender: "male",
         age: 31,
       },
@@ -595,16 +661,15 @@ var myApp = angular
     $scope.pageSize = 5;
 
     initController();
-
     function initController() {
       // initialize to page 1
       $scope.setPage(1);
     }
 
     function setPage(page, pageSize = 5) {
-      if (page < 1 || page > $scope.pager.totalPages) {
-        return;
-      }
+      // if (page < 1 || page > $scope.pager.totalPages) {
+      //   return;
+      // }
       // get pager object from service
       $scope.pager = PagerService.GetPager(
         $filter("filter")($scope.data, $scope.searchText).length,
@@ -612,7 +677,7 @@ var myApp = angular
         pageSize
       );
 
-      // get current page of items
+      // get current page of items for view
       $scope.employees = $filter("filter")(
         $scope.data,
         $scope.searchText
@@ -649,16 +714,55 @@ var myApp = angular
       // selected employee
       $scope.selectedEmployee = {};
       // calculated age
-      $scope.age = new Date();
+      $scope.dob = new Date();
     };
 
+    // set max date on dob and startDate of degree
+    setMaxAtt();
+    function setMaxAtt() {
+      // date selector set max date
+      let today = new Date();
+      let dd = today.getDate();
+      let mm = today.getMonth() + 1; //January is 0!
+      let yyyy = today.getFullYear();
+      if (dd < 10) {
+        dd = "0" + dd;
+      }
+      if (mm < 10) {
+        mm = "0" + mm;
+      }
+      today = yyyy + "-" + mm + "-" + dd;
+      $scope.today = today;
+      document.getElementById("userDob").setAttribute("max", today);
+      document.getElementById("startDate").setAttribute("max", today);
+    }
+
     // calculate age
-    $scope.age = new Date();
+    $scope.dob = new Date();
     $scope.calcAge = function () {
-      var Bday = +new Date($scope.age);
+      var Bday = +new Date($scope.dob);
       var usrAge = ~~((Date.now() - Bday) / 31557600000);
       if (usrAge == 0) usrAge = 1;
       return usrAge;
+    };
+
+    // set min date
+    $scope.startDate = new Date();
+    // start date changed so change min attr of endDate
+    $scope.dateChanged = function () {
+      let today = $scope.startDate;
+      let dd = today.getDate();
+      let mm = today.getMonth() + 1; //January is 0!
+      let yyyy = today.getFullYear();
+      if (dd < 10) {
+        dd = "0" + dd;
+      }
+      if (mm < 10) {
+        mm = "0" + mm;
+      }
+      today = yyyy + "-" + mm + "-" + dd;
+      document.getElementById("endDate").setAttribute("min", today);
+      document.getElementById("endDate").value = "";
     };
 
     // add qualifications
@@ -696,24 +800,7 @@ var myApp = angular
       $scope.degrees.splice(index, 1);
     };
 
-    // set min date
-    $scope.startDate = new Date();
-    $scope.dateChanged = function () {
-      let today = $scope.startDate;
-      let dd = today.getDate();
-      let mm = today.getMonth() + 1; //January is 0!
-      let yyyy = today.getFullYear();
-      if (dd < 10) {
-        dd = "0" + dd;
-      }
-      if (mm < 10) {
-        mm = "0" + mm;
-      }
-      today = yyyy + "-" + mm + "-" + dd;
-      document.getElementById("endDate").setAttribute("min", today);
-      document.getElementById("endDate").value = "";
-    };
-    // if user wants to edit date after adding a degree
+    // if user wants to edit start/end date after adding a degree
     $scope.dateChangeDegree = function (index) {
       let today = $scope.degrees[index].startDate;
       let dd = today.getDate();
@@ -732,13 +819,10 @@ var myApp = angular
 
     // edit user
     $scope.editUser = function (user) {
-      var form = document.querySelector(".needs-validation");
-      // reset form-styles
-      form.classList.remove("was-validated");
       if (user.dob) {
-        $scope.age = new Date(user.dob);
+        $scope.dob = new Date(user.dob);
       } else {
-        $scope.age = new Date();
+        $scope.dob = new Date();
       }
       if (user.degrees) {
         $scope.degrees = user.degrees;
@@ -746,18 +830,27 @@ var myApp = angular
     };
     // delete user
     $scope.deleteUser = function (user) {
-      $scope.employees.forEach((item, index) => {
+      $scope.data.forEach((item, index) => {
         if (item.phone == user.phone) {
-          $scope.employees.splice(index, 1);
+          $scope.data.splice(index, 1);
         }
       });
+      // check pages
+      if (
+        $scope.pager.currentPage >
+        Math.ceil(
+          $filter("filter")($scope.data, $scope.searchText).length /
+            $scope.pageSize
+        )
+      ) {
+        $scope.pager.currentPage--;
+      }
+      // reload
+      setPage($scope.pager.currentPage, $scope.pageSize);
       document.querySelector(".alert-danger").style.display = "block";
       setTimeout(function () {
         document.querySelector(".alert-danger").style.display = "none";
       }, 3000);
-      if ($scope.currentPage == $scope.numberOfPages()) {
-        $scope.currentPage--;
-      }
     };
 
     // format date
@@ -790,22 +883,22 @@ var myApp = angular
           } else {
             // edit employee in employees
             if ($scope.selectedEmployee.name) {
-              $scope.employees.forEach((item, index) => {
+              $scope.data.forEach((item, index) => {
                 if (item.phone == $scope.selectedEmployee.phone) {
-                  $scope.employees[index] = {
+                  $scope.data[index] = {
                     name: document.getElementById("userName").value,
                     email: document.getElementById("userEmail").value,
                     phone: document.getElementById("userPhone").value,
                     gender: document.getElementById("userGender").value,
                     age: document.getElementById("userAge").textContent,
                     address: document.getElementById("userAddress").value,
-                    dob: document.getElementById("dob").value,
+                    dob: document.getElementById("userDob").value,
                   };
                   // add degree to employee
                   if ($scope.degrees.length >= 1) {
-                    $scope.employees[index].degrees = [];
+                    $scope.data[index].degrees = [];
                     $scope.degrees.forEach((element) => {
-                      $scope.employees[index].degrees.unshift(element);
+                      $scope.data[index].degrees.unshift(element);
                     });
                   }
                 }
@@ -813,20 +906,20 @@ var myApp = angular
             }
             // add new employee
             else {
-              $scope.employees.unshift({
+              $scope.data.unshift({
                 name: document.getElementById("userName").value,
                 email: document.getElementById("userEmail").value,
                 phone: document.getElementById("userPhone").value,
                 gender: document.getElementById("userGender").value,
                 age: document.getElementById("userAge").textContent,
                 address: document.getElementById("userAddress").value,
-                dob: document.getElementById("dob").value,
+                dob: document.getElementById("userDob").value,
               });
               // add degree to employee
               if ($scope.degrees.length >= 1) {
-                $scope.employees[0].degrees = [];
+                $scope.data[0].degrees = [];
                 $scope.degrees.forEach((element) => {
-                  $scope.employees[0].degrees.unshift(element);
+                  $scope.data[0].degrees.unshift(element);
                 });
               }
             }
@@ -847,6 +940,8 @@ var myApp = angular
               }, 3000);
             }
             document.querySelector(".form-modal-close").click();
+            // reload
+            setPage($scope.pager.currentPage, $scope.pageSize);
 
             return;
           }
@@ -854,86 +949,5 @@ var myApp = angular
         },
         false
       );
-      // date selector set max date
-      var today = new Date();
-      var dd = today.getDate();
-      var mm = today.getMonth() + 1; //January is 0!
-      var yyyy = today.getFullYear();
-      if (dd < 10) {
-        dd = "0" + dd;
-      }
-      if (mm < 10) {
-        mm = "0" + mm;
-      }
-      today = yyyy + "-" + mm + "-" + dd;
-      $scope.today = today;
-      document.getElementById("dob").setAttribute("max", today);
-      document.getElementById("startDate").setAttribute("max", today);
     })();
   });
-myApp.filter("capitalize", function () {
-  return function (input) {
-    return angular.isString(input) && input.length > 0
-      ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase()
-      : input;
-  };
-});
-myApp.factory("PagerService", function PagerService() {
-  // service definition
-  var service = {};
-
-  service.GetPager = GetPager;
-
-  return service;
-
-  // service implementation
-  function GetPager(totalItems, currentPage, pageSize) {
-    // default to first page
-    currentPage = currentPage || 1;
-
-    // default page size is 5
-    pageSize = pageSize || 5;
-
-    // calculate total pages
-    var totalPages = Math.ceil(totalItems / pageSize);
-
-    var startPage, endPage;
-    if (totalPages <= 10) {
-      // less than 10 total pages so show all
-      startPage = 1;
-      endPage = totalPages;
-    } else {
-      // more than 10 total pages so calculate start and end pages
-      if (currentPage <= 6) {
-        startPage = 1;
-        endPage = 10;
-      } else if (currentPage + 4 >= totalPages) {
-        startPage = totalPages - 9;
-        endPage = totalPages;
-      } else {
-        startPage = currentPage - 5;
-        endPage = currentPage + 4;
-      }
-    }
-
-    // calculate start and end item indexes
-    var startIndex = (currentPage - 1) * pageSize;
-    var endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
-
-    // create an array of pages to ng-repeat in the pager control
-    var pages = _.range(startPage, endPage + 1);
-
-    // return object with all pager properties required by the view
-    return {
-      totalItems: totalItems,
-      currentPage: currentPage,
-      pageSize: pageSize,
-      totalPages: totalPages,
-      startPage: startPage,
-      endPage: endPage,
-      startIndex: startIndex,
-      endIndex: endIndex,
-      pages: pages,
-    };
-  }
-});

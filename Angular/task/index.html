@@ -179,7 +179,7 @@
         class="modal fade"
         id="formModal"
         tabindex="-1"
-        style="overflow-x: hidden; overflow-y: auto"
+        style="overflow-y: auto"
         data-bs-backdrop="static"
         aria-labelledby="userInputModal"
         aria-hidden="true"
@@ -221,15 +221,12 @@
                       type="text"
                       class="form-control"
                       id="userName"
-                      placeholder="John Doe"
                       aria-label="name"
                       aria-describedby="Username"
                       value="{{selectedEmployee.name}}"
                       required
                     />
-                    <div class="invalid-feedback">
-                      Please provide your name.
-                    </div>
+                    <div class="invalid-feedback">Please provide a name.</div>
                   </div>
                   <!-- email -->
                   <div class="col-md-6">
@@ -237,7 +234,6 @@
                     <input
                       type="email"
                       class="form-control"
-                      placeholder="name@example.com"
                       value="{{selectedEmployee.email}}"
                       id="userEmail"
                       aria-label="email"
@@ -249,17 +245,10 @@
                   <!-- address -->
                   <div class="col-md-12">
                     <label for="userAddress" class="form-label">Address:</label>
-                    <textarea
-                      class="form-control"
-                      id="userAddress"
-                      placeholder="1234 Main St"
-                      required
-                    >
+                    <textarea class="form-control" id="userAddress" required>
 {{selectedEmployee.address}}</textarea
                     >
-                    <div class="invalid-feedback">
-                      Please provide your address.
-                    </div>
+                    <div class="invalid-feedback">Please provide address.</div>
                   </div>
                   <!-- phone -->
                   <div class="col-md-5">
@@ -270,7 +259,6 @@
                       class="form-control"
                       value="{{selectedEmployee.phone}}"
                       id="userPhone"
-                      placeholder="9050607080"
                       aria-label="number"
                       aria-describedby="PhoneNumber"
                       required
@@ -329,14 +317,12 @@
                       <span class="text-muted"> year(s)</span>
                     </label>
                     <input
-                      id="dob"
+                      id="userDob"
                       type="date"
                       min="1900-01-01"
                       max=""
                       class="form-control"
-                      ng-model="age"
-                      aria-label="dob"
-                      aria-describedby="dob"
+                      ng-model="dob"
                       required
                     />
                     <div class="invalid-feedback">Select your birthday.</div>
