@@ -335,6 +335,12 @@
                   <div id="error" style="color: red; display: none">
                     Please fill all the fields
                   </div>
+                  <div id="dateError" style="color: red; display: none">
+                    Start date can't be greater than end date.
+                  </div>
+                  <div id="dateError2" style="color: red; display: none">
+                    Please enter a correct start date.
+                  </div>
                   <!-- Input -->
                   <div class="col-md-12 py-2">
                     <div class="row g-1">
@@ -378,12 +384,11 @@
                         >
                         <input
                           type="date"
-                          min="1900-01-01"
+                          min=""
                           max=""
                           class="form-control no-validate"
                           id="startDate"
                           ng-model="startDate"
-                          ng-change="dateChanged()"
                         />
                       </div>
                       <!-- End Date -->
@@ -463,25 +468,30 @@
                       <div class="col-md-2">
                         <input
                           type="date"
-                          min="1900-01-01"
+                          min=""
                           max="{{today}}"
                           ng-model="degrees[$index].startDate"
-                          ng-change="dateChangeDegree($index)"
                           class="form-control"
                           required
                         />
+                        <div class="invalid-feedback">
+                          Provide a valid start date.
+                        </div>
                       </div>
                       <!-- End Date -->
                       <div class="col-md-2">
                         <input
                           type="date"
-                          min=""
+                          min="{{setMin($index)}}"
                           max=""
                           ng-model="degrees[$index].endDate"
                           class="form-control"
                           id="endDate-{{$index}}"
                           required
                         />
+                        <div class="invalid-feedback">
+                          Provide a valid end date.
+                        </div>
                       </div>
                       <!-- marks -->
                       <div class="col-md-2">

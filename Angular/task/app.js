@@ -655,6 +655,11 @@ var myApp = angular
         age: 31,
       },
     ];
+    // assign id's
+    for (let i = $scope.data.length - 1, j = 1; i >= 0; i--, j++) {
+      $scope.data[i].id = j;
+    }
+
     // for-pagination
     $scope.pager = {};
     $scope.setPage = setPage;
@@ -715,6 +720,8 @@ var myApp = angular
       $scope.selectedEmployee = {};
       // calculated age
       $scope.dob = new Date();
+      document.getElementById("endDate").setAttribute("min", "");
+      document.getElementById("endDate").value = "";
     };
 
     // set max date on dob and startDate of degree
@@ -746,24 +753,28 @@ var myApp = angular
       return usrAge;
     };
 
-    // set min date
-    $scope.startDate = new Date();
-    // start date changed so change min attr of endDate
-    $scope.dateChanged = function () {
-      let today = $scope.startDate;
-      let dd = today.getDate();
-      let mm = today.getMonth() + 1; //January is 0!
-      let yyyy = today.getFullYear();
-      if (dd < 10) {
-        dd = "0" + dd;
-      }
-      if (mm < 10) {
-        mm = "0" + mm;
-      }
-      today = yyyy + "-" + mm + "-" + dd;
-      document.getElementById("endDate").setAttribute("min", today);
-      document.getElementById("endDate").value = "";
-    };
+    // set min attr on endDate
+    $scope.$watch(
+      "startDate",
+      function (newValue, oldValue) {
+        if (oldValue != newValue) {
+          let today = $scope.startDate;
+          let dd = today.getDate();
+          let mm = today.getMonth() + 1; //January is 0!
+          let yyyy = today.getFullYear();
+          if (dd < 10) {
+            dd = "0" + dd;
+          }
+          if (mm < 10) {
+            mm = "0" + mm;
+          }
+          today = yyyy + "-" + mm + "-" + dd;
+          document.getElementById("endDate").setAttribute("min", today);
+          document.getElementById("endDate").value = "";
+        }
+      },
+      true
+    );
 
     // add qualifications
     $scope.degrees = [];
@@ -778,6 +789,16 @@ var myApp = angular
         document.getElementById("error").style.display = "block";
         setTimeout(function () {
           document.getElementById("error").style.display = "none";
+        }, 2000);
+      } else if (new Date(end) - new Date(strt) < 0) {
+        document.getElementById("dateError").style.display = "block";
+        setTimeout(function () {
+          document.getElementById("dateError").style.display = "none";
+        }, 2000);
+      } else if (new Date() - new Date(strt) < 0) {
+        document.getElementById("dateError2").style.display = "block";
+        setTimeout(function () {
+          document.getElementById("dateError2").style.display = "none";
         }, 2000);
       }
       // add degree
@@ -801,8 +822,11 @@ var myApp = angular
     };
 
     // if user wants to edit start/end date after adding a degree
-    $scope.dateChangeDegree = function (index) {
+    $scope.setMin = function (index) {
       let today = $scope.degrees[index].startDate;
+      if (typeof today == "undefined") {
+        today = new Date();
+      }
       let dd = today.getDate();
       let mm = today.getMonth() + 1; //January is 0!
       let yyyy = today.getFullYear();
@@ -813,8 +837,7 @@ var myApp = angular
         mm = "0" + mm;
       }
       today = yyyy + "-" + mm + "-" + dd;
-      document.getElementById(`endDate-${index}`).setAttribute("min", today);
-      document.getElementById(`endDate-${index}`).value = "";
+      return today;
     };
 
     // edit user
@@ -831,7 +854,7 @@ var myApp = angular
     // delete user
     $scope.deleteUser = function (user) {
       $scope.data.forEach((item, index) => {
-        if (item.phone == user.phone) {
+        if (item.id == user.id) {
           $scope.data.splice(index, 1);
         }
       });
@@ -855,6 +878,20 @@ var myApp = angular
 
     // format date
     $scope.getDate = function (date) {
+      if (typeof date == "undefined") {
+        let today = new Date();
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1; //January is 0!
+        let yyyy = today.getFullYear();
+        if (dd < 10) {
+          dd = "0" + dd;
+        }
+        if (mm < 10) {
+          mm = "0" + mm;
+        }
+        today = yyyy + "-" + mm + "-" + dd;
+        return today;
+      }
       let today = date;
       let dd = today.getDate();
       let mm = today.getMonth() + 1; //January is 0!
@@ -884,7 +921,7 @@ var myApp = angular
             // edit employee in employees
             if ($scope.selectedEmployee.name) {
               $scope.data.forEach((item, index) => {
-                if (item.phone == $scope.selectedEmployee.phone) {
+                if (item.id == $scope.selectedEmployee.id) {
                   $scope.data[index] = {
                     name: document.getElementById("userName").value,
                     email: document.getElementById("userEmail").value,
@@ -893,6 +930,7 @@ var myApp = angular
                     age: document.getElementById("userAge").textContent,
                     address: document.getElementById("userAddress").value,
                     dob: document.getElementById("userDob").value,
+                    id: $scope.selectedEmployee.id,
                   };
                   // add degree to employee
                   if ($scope.degrees.length >= 1) {
@@ -906,6 +944,7 @@ var myApp = angular
             }
             // add new employee
             else {
+              let temp = $scope.data[0].id + 1;
               $scope.data.unshift({
                 name: document.getElementById("userName").value,
                 email: document.getElementById("userEmail").value,
@@ -914,6 +953,7 @@ var myApp = angular
                 age: document.getElementById("userAge").textContent,
                 address: document.getElementById("userAddress").value,
                 dob: document.getElementById("userDob").value,
+                id: temp,
               });
               // add degree to employee
               if ($scope.degrees.length >= 1) {
