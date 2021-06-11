@@ -1,0 +1,32 @@
+<div
+  class="d-flex justify-content-center flex-column mx-auto"
+  style="height: 100%; max-width: 400px"
+>
+  <h3>Login Page</h3>
+  <form ng-submit="formSubmit()" class="form">
+    <div class="form-group py-2">
+      <input
+        type="text"
+        class="form-control"
+        ng-model="username"
+        placeholder="username"
+        required=""
+      />
+    </div>
+    <div class="form-group py-2">
+      <input
+        type="password"
+        class="form-control"
+        ng-model="password"
+        placeholder="password"
+        required=""
+      />
+    </div>
+
+    <div class="form-group py-2">
+      <button type="submit" class="btn btn-primary">Login</button>
+      <br /><br />
+      <span class="text-danger">{{ error }}</span>
+    </div>
+  </form>
+</div>
