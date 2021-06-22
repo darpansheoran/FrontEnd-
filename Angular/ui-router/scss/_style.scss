@@ -56,7 +56,8 @@ a {
 .fa-arrow-right,
 .fa-eye,
 .fa-eye-slash,
-.fa-bars {
+.fa-bars,
+.fa-info-circle {
   cursor: pointer;
 }
 
@@ -72,26 +73,12 @@ a {
   height: 100%;
   width: 0;
   position: fixed;
-  z-index: 1;
+  z-index: 10;
   top: 0;
   left: 0;
   background-color: #15202b;
   overflow-x: hidden;
   transition: 0.4s;
-}
-
-#main {
-  transition: 0.4s;
-}
-
-/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-@media screen and (max-height: 450px) {
-  .sidebar {
-    padding-top: 15px;
-  }
-  .sidebar a {
-    font-size: 18px;
-  }
 }
 
 /* media queries */

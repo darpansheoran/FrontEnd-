@@ -42,14 +42,6 @@ app.controller(
         $timeout(function () {
           $scope.flash = null;
         }, 2000);
-      } else if (!new RegExp("^(?=.*[!@#$%^&*])").test($scope.password)) {
-        $scope.flash = {
-          type: "error",
-          message: `Password must contain a special character.`,
-        };
-        $timeout(function () {
-          $scope.flash = null;
-        }, 2000);
       } else if ($scope.password.length < 8) {
         $scope.flash = {
           type: "error",
@@ -84,5 +76,7 @@ app.controller(
     function togglePassword2() {
       $scope.typePassword2 = !$scope.typePassword2;
     }
+    var passwdTooltip = document.querySelector(".fa-info-circle");
+    var tooltip = new bootstrap.Tooltip(passwdTooltip);
   }
 );
