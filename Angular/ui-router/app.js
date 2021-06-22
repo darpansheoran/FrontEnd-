@@ -9,17 +9,17 @@ app.config([
     $stateProvider
       .state("login", {
         url: "/login",
-        templateUrl: "login.html",
+        templateUrl: "login/login.html",
         controller: "LoginController",
       })
       .state("register", {
         url: "/register",
-        templateUrl: "register.html",
+        templateUrl: "register/register.html",
         controller: "RegisterController",
       })
       .state("home", {
         url: "/home",
-        templateUrl: "home.html",
+        templateUrl: "home/home.html",
         controller: "myController",
       });
   },
