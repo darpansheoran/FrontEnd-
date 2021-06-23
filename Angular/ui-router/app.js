@@ -1,10 +1,11 @@
-var app = angular.module("myApp", ["ui.router"]);
+var app = angular.module("myApp", ["ui.router", "ng-fusioncharts"]);
 
 app.config([
   "$stateProvider",
   "$urlRouterProvider",
   function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise("/login");
+    $urlRouterProvider.when("/home", "/home/" + "datalist");
 
     $stateProvider
       .state("login", {
@@ -20,7 +21,22 @@ app.config([
       .state("home", {
         url: "/home",
         templateUrl: "home/home.html",
-        controller: "myController",
+        controller: "homeController",
+      })
+      .state("home.dataList", {
+        url: "/datalist",
+        templateUrl: "home/dataList.html",
+        controller: "dataListController",
+      })
+      .state("home.charts", {
+        url: "/charts",
+        templateUrl: "home/charts.html",
+        controller: "chartsController",
+      })
+      .state("home.profile", {
+        url: "/profile",
+        templateUrl: "home/profile.html",
+        controller: "profileController",
       });
   },
 ]);
@@ -28,6 +44,7 @@ app.config([
 app.factory("LoginService", function () {
   var users = [{ username: "admin", password: "pass" }];
   var isAuthenticated = false;
+  var currentUser = null;
 
   return {
     login: function (username, password) {
@@ -35,6 +52,7 @@ app.factory("LoginService", function () {
       users.forEach((user) => {
         if (user.username == username && user.password == password) {
           isAuthenticated = true;
+          currentUser = user;
         }
       });
       return isAuthenticated;
@@ -51,6 +69,9 @@ app.factory("LoginService", function () {
       });
 
       return tmp;
+    },
+    getCurrentUser: function () {
+      return currentUser;
     },
   };
 });

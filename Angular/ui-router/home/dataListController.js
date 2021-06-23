@@ -1,4 +1,4 @@
-app.controller("myController", function ($scope, $filter, PagerService) {
+app.controller("dataListController", function ($scope, $filter, PagerService) {
   $scope.data = [
     {
       name: "Darpan",
@@ -595,14 +595,6 @@ app.controller("myController", function ($scope, $filter, PagerService) {
   $scope.pager = {};
   $scope.setPage = setPage;
   $scope.pageSize = 5;
-
-  // sidebar show/hide
-  $scope.openNav = function () {
-    document.getElementById("mySidebar").style.width = "250px";
-  };
-  $scope.closeNav = function () {
-    document.getElementById("mySidebar").style.width = "0";
-  };
 
   initController();
   function initController() {

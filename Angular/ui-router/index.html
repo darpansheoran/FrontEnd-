@@ -25,6 +25,23 @@
     ></script>
     <!-- ui-router -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.js"></script>
+
+    <!-- charts -->
+    <!-- fusioncharts core library -->
+    <script
+      type="text/javascript"
+      src="https://cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"
+    ></script>
+    <!-- angularjs-fusioncharts directive-->
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/angularjs-fusioncharts@4.0.1/dist/angular-fusioncharts.js"
+    ></script>
+    <!-- fusion theme -->
+    <script
+      type="text/javascript"
+      src="https://cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.carbon.js"
+    ></script>
   </head>
   <body ng-app="myApp">
     <div style="height: 100%" ui-view></div>
@@ -36,8 +53,11 @@
       crossorigin="anonymous"
     ></script>
     <script src="app.js"></script>
-    <script src="home/home.controller.js"></script>
     <script src="login/login.controller.js"></script>
     <script src="register/register.controller.js"></script>
+    <script src="home/homeController.js"></script>
+    <script src="home/dataListController.js"></script>
+    <script src="home/profileController.js"></script>
+    <script src="home/chartsController.js"></script>
   </body>
 </html>
