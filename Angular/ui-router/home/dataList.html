@@ -78,11 +78,11 @@
           data-bs-target="#completeDetails"
           ng-repeat="employee in employees |filter:searchText "
         >
-          <td>{{employee.name}}</td>
+          <td>{{employee.name.first +" "+ employee.name.last}}</td>
           <td>{{employee.email}}</td>
           <td>{{employee.phone}}</td>
           <td><i class="fas fa-{{employee.gender}}"></i></td>
-          <td>{{employee.age}}</td>
+          <td>{{employee.dob.age}}</td>
         </tr>
       </tbody>
     </table>
