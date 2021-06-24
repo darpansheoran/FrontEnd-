@@ -39,7 +39,7 @@ app.controller(
     }
 
     $scope.searchText = "";
-    $scope.selectedEmployee = {};
+    $scope.selectedEmployee = null;
 
     // goTo page 1 if searching
     $scope.$watch(
@@ -56,6 +56,9 @@ app.controller(
       $scope.selectedEmployee = employee;
     };
 
+    // get today for max attr
+    $scope.today = new Date();
+
     // reset form when it is opened/closed
     $scope.resetForm = function () {
       var form = document.querySelector(".needs-validation");
@@ -64,37 +67,12 @@ app.controller(
       // reset form-styles
       form.classList.remove("was-validated");
       // qualifications
-      $scope.degrees = [];
+      $scope.degrees = [{}];
       // selected employee
-      $scope.selectedEmployee = {};
-      // calculated age
-      $scope.dob = new Date();
-      document.getElementById("endDate").setAttribute("min", "");
-      document.getElementById("endDate").value = "";
+      $scope.selectedEmployee = null;
     };
 
-    // set max date on dob and startDate of degree
-    setMaxAtt();
-    function setMaxAtt() {
-      // date selector set max date
-      let today = new Date();
-      let dd = today.getDate();
-      let mm = today.getMonth() + 1; //January is 0!
-      let yyyy = today.getFullYear();
-      if (dd < 10) {
-        dd = "0" + dd;
-      }
-      if (mm < 10) {
-        mm = "0" + mm;
-      }
-      today = yyyy + "-" + mm + "-" + dd;
-      $scope.today = today;
-      document.getElementById("userDob").setAttribute("max", today);
-      document.getElementById("startDate").setAttribute("max", today);
-    }
-
     // calculate age
-    $scope.dob = new Date();
     $scope.calcAge = function () {
       var Bday = +new Date($scope.dob);
       var usrAge = ~~((Date.now() - Bday) / 31557600000);
@@ -102,100 +80,44 @@ app.controller(
       return usrAge;
     };
 
-    // set min attr on endDate
-    $scope.$watch(
-      "startDate",
-      function (newValue, oldValue) {
-        if (oldValue != newValue) {
-          let today = $scope.startDate;
-          let dd = today.getDate();
-          let mm = today.getMonth() + 1; //January is 0!
-          let yyyy = today.getFullYear();
-          if (dd < 10) {
-            dd = "0" + dd;
-          }
-          if (mm < 10) {
-            mm = "0" + mm;
-          }
-          today = yyyy + "-" + mm + "-" + dd;
-          document.getElementById("endDate").setAttribute("min", today);
-          document.getElementById("endDate").value = "";
-        }
-      },
-      true
-    );
-
     // add qualifications
-    $scope.degrees = [];
+    $scope.degrees = [{}];
     $scope.addRow = function () {
-      let edu = document.getElementById("education").value;
-      let inst = document.getElementById("institute").value;
-      let strt = document.getElementById("startDate").value;
-      let end = document.getElementById("endDate").value;
-      let marks = document.getElementById("marks").value;
-      // error
-      if (edu == "" || inst == "" || strt == "" || end == "" || marks == "") {
-        document.getElementById("error").style.display = "block";
-        setTimeout(function () {
-          document.getElementById("error").style.display = "none";
-        }, 2000);
-      } else if (new Date(end) - new Date(strt) < 0) {
-        document.getElementById("dateError").style.display = "block";
-        setTimeout(function () {
-          document.getElementById("dateError").style.display = "none";
-        }, 2000);
-      } else if (new Date() - new Date(strt) < 0) {
-        document.getElementById("dateError2").style.display = "block";
-        setTimeout(function () {
-          document.getElementById("dateError2").style.display = "none";
-        }, 2000);
-      }
       // add degree
+      if (
+        $scope.degrees[0].education &&
+        $scope.degrees[0].institute &&
+        $scope.degrees[0].startDate &&
+        $scope.degrees[0].endDate &&
+        $scope.degrees[0].marks
+      ) {
+        $scope.degrees.unshift({});
+      }
+      // error
       else {
-        $scope.degrees.unshift({
-          education: edu,
-          institute: inst,
-          startDate: new Date(strt),
-          endDate: new Date(end),
-          marks: marks,
-        });
-        document.getElementById("education").value = "";
-        document.getElementById("institute").value = "";
-        document.getElementById("startDate").value = "";
-        document.getElementById("endDate").value = "";
-        document.getElementById("marks").value = "";
+        console.log("error");
       }
     };
     $scope.delRow = function (index) {
       $scope.degrees.splice(index, 1);
     };
 
-    // if user wants to edit start/end date after adding a degree
-    $scope.setMin = function (index) {
-      let today = $scope.degrees[index].startDate;
-      if (typeof today == "undefined") {
-        today = new Date();
-      }
-      let dd = today.getDate();
-      let mm = today.getMonth() + 1; //January is 0!
-      let yyyy = today.getFullYear();
-      if (dd < 10) {
-        dd = "0" + dd;
-      }
-      if (mm < 10) {
-        mm = "0" + mm;
-      }
-      today = yyyy + "-" + mm + "-" + dd;
-      return today;
-    };
-
     // edit user
     $scope.editUser = function (user) {
-      if (user.dob) {
-        $scope.dob = new Date(user.dob);
-      } else {
-        $scope.dob = new Date();
-      }
+      // fill the form when editing
+      $scope.name =
+        user.name.title + " " + user.name.first + " " + user.name.last;
+      $scope.email = user.email;
+      $scope.address =
+        user.location.street.number +
+        " " +
+        user.location.street.name +
+        ", " +
+        user.location.city +
+        ", " +
+        user.location.country;
+      $scope.phone = user.phone;
+      $scope.dob = new Date(user.dob.date);
       if (user.degrees) {
         $scope.degrees = user.degrees;
       }
@@ -225,126 +147,81 @@ app.controller(
       }, 3000);
     };
 
-    // format date
-    $scope.getDate = function (date) {
-      if (typeof date == "undefined") {
-        let today = new Date();
-        let dd = today.getDate();
-        let mm = today.getMonth() + 1; //January is 0!
-        let yyyy = today.getFullYear();
-        if (dd < 10) {
-          dd = "0" + dd;
-        }
-        if (mm < 10) {
-          mm = "0" + mm;
-        }
-        today = yyyy + "-" + mm + "-" + dd;
-        return today;
-      }
-      let today = date;
-      let dd = today.getDate();
-      let mm = today.getMonth() + 1; //January is 0!
-      let yyyy = today.getFullYear();
-      if (dd < 10) {
-        dd = "0" + dd;
-      }
-      if (mm < 10) {
-        mm = "0" + mm;
-      }
-      today = yyyy + "-" + mm + "-" + dd;
-      return today;
-    };
-
     // form-validation
-    // Fetch the form we want to apply custom Bootstrap validation styles to
-    var form = document.querySelector(".needs-validation");
-    form.addEventListener(
-      "submit",
-      function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault();
-          event.stopPropagation();
-        } else {
-          // edit employee in employees
-          if ($scope.selectedEmployee.name) {
-            $scope.data.forEach((item, index) => {
-              if (item.id == $scope.selectedEmployee.id) {
-                $scope.data[index] = {
-                  name: document.getElementById("userName").value,
-                  email: document.getElementById("userEmail").value,
-                  phone: document.getElementById("userPhone").value,
-                  gender: document.getElementById("userGender").value,
-                  age: document.getElementById("userAge").textContent,
-                  address: document.getElementById("userAddress").value,
-                  dob: document.getElementById("userDob").value,
-                  id: $scope.selectedEmployee.id,
-                };
-                // add degree to employee
-                if ($scope.degrees.length >= 1) {
-                  $scope.data[index].degrees = [];
-                  $scope.degrees.forEach((element) => {
-                    $scope.data[index].degrees.unshift(element);
-                  });
-                }
-              }
-            });
-          }
-          // add new employee
-          else {
-            let temp = $scope.data[0].id + 1;
-            $scope.data.unshift({
-              name: document.getElementById("userName").value,
-              email: document.getElementById("userEmail").value,
-              phone: document.getElementById("userPhone").value,
-              gender: document.getElementById("userGender").value,
-              age: document.getElementById("userAge").textContent,
-              address: document.getElementById("userAddress").value,
-              dob: document.getElementById("userDob").value,
-              id: temp,
-            });
-            // add degree to employee
-            if ($scope.degrees.length >= 1) {
-              $scope.data[0].degrees = [];
-              $scope.degrees.forEach((element) => {
-                $scope.data[0].degrees.unshift(element);
-              });
-            }
-          }
-          // close modal & Show success message
-          // update message
-          if ($scope.selectedEmployee.name) {
-            document.querySelector(".alert-info").style.display = "block";
-            setTimeout(function () {
-              document.querySelector(".alert-info").style.display = "none";
-            }, 3000);
-          }
-          // new user added message
-          else {
-            document.querySelector(".alert-primary").style.display = "block";
-            setTimeout(function () {
-              document.querySelector(".alert-primary").style.display = "none";
-            }, 3000);
-          }
-          document.querySelector(".form-modal-close").click();
-          // reload
-          setPage($scope.pager.currentPage, $scope.pageSize);
-
-          return;
-        }
+    $scope.formSubmit = function () {
+      let form = document.querySelector(".needs-validation");
+      if (!form.checkValidity()) {
         form.classList.add("was-validated");
-      },
-      false
-    );
+      } else {
+        // edit employee in employees
+        if ($scope.selectedEmployee) {
+          $scope.data.forEach((item, index) => {
+            if (item.id == $scope.selectedEmployee.id) {
+              $scope.data[index] = {
+                name: document.getElementById("userName").value,
+                email: document.getElementById("userEmail").value,
+                phone: document.getElementById("userPhone").value,
+                gender: document.getElementById("userGender").value,
+                age: document.getElementById("userAge").textContent,
+                address: document.getElementById("userAddress").value,
+                dob: document.getElementById("userDob").value,
+                id: $scope.selectedEmployee.id,
+              };
+              // add degree to employee
+              if ($scope.degrees.length >= 1) {
+                $scope.data[index].degrees = [];
+                $scope.degrees.forEach((element) => {
+                  $scope.data[index].degrees.unshift(element);
+                });
+              }
+            }
+          });
+        }
+        // add new employee
+        else {
+          let temp = $scope.data[0].id + 1;
+          $scope.data.unshift({
+            name: document.getElementById("userName").value,
+            email: document.getElementById("userEmail").value,
+            phone: document.getElementById("userPhone").value,
+            gender: document.getElementById("userGender").value,
+            age: document.getElementById("userAge").textContent,
+            address: document.getElementById("userAddress").value,
+            dob: document.getElementById("userDob").value,
+            id: temp,
+          });
+          // add degree to employee
+          if ($scope.degrees.length >= 1) {
+            $scope.data[0].degrees = [];
+            $scope.degrees.forEach((element) => {
+              $scope.data[0].degrees.unshift(element);
+            });
+          }
+        }
+        // close modal & Show success message
+        // update message
+        if ($scope.selectedEmployee) {
+          document.querySelector(".alert-info").style.display = "block";
+          setTimeout(function () {
+            document.querySelector(".alert-info").style.display = "none";
+          }, 3000);
+        }
+        // new user added message
+        else {
+          document.querySelector(".alert-primary").style.display = "block";
+          setTimeout(function () {
+            document.querySelector(".alert-primary").style.display = "none";
+          }, 3000);
+        }
+        document.querySelector(".form-modal-close").click();
+        // reload
+        setPage($scope.pager.currentPage, $scope.pageSize);
+
+        return;
+      }
+    };
   }
 );
-
-app.filter("capitalize", function () {
-  return function (input) {
-    return angular.isString(input) && input.length > 0
-      ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase()
-      : input;
-  };
-});
 
 app.factory("PagerService", function PagerService() {
   // service definition
