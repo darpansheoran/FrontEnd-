@@ -1,22 +1,19 @@
 app.controller(
   "dataListController",
-  function ($scope, $filter, PagerService, $http) {
-    // get random users from api
-    $http
-      .get("https://randomuser.me/api/?results=100")
-      .then(function (response) {
-        $scope.data = response.data.results;
-        // assign id's
-        for (let i = $scope.data.length - 1, j = 1; i >= 0; i--, j++) {
-          $scope.data[i].id = j;
-        }
+  function ($scope, $filter, PagerService, randomUser) {
+    randomUser.getData().then(function (response) {
+      $scope.data = response.data.results;
+      // assign id's
+      for (let i = $scope.data.length - 1, j = 1; i >= 0; i--, j++) {
+        $scope.data[i].id = j;
+      }
 
-        initController();
-        function initController() {
-          // initialize to page 1
-          $scope.setPage(1);
-        }
-      });
+      initController();
+      function initController() {
+        // initialize to page 1
+        $scope.setPage(1);
+      }
+    });
 
     // for-pagination
     $scope.pager = {};
@@ -315,4 +312,14 @@ app.factory("PagerService", function PagerService() {
       pages: pages,
     };
   }
+});
+
+app.factory("randomUser", function apiService($http) {
+  var data;
+
+  return {
+    getData: function () {
+      return $http.get("https://randomuser.me/api/?results=100");
+    },
+  };
 });

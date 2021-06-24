@@ -32,11 +32,6 @@ app.config([
         url: "/charts",
         templateUrl: "home/charts.html",
         controller: "chartsController",
-      })
-      .state("home.profile", {
-        url: "/profile",
-        templateUrl: "home/profile.html",
-        controller: "profileController",
       });
   },
 ]);
