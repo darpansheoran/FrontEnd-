@@ -73,12 +73,12 @@ app.controller(
     };
 
     // calculate age
-    $scope.calcAge = function () {
+    function calcAge() {
       var Bday = +new Date($scope.dob);
       var usrAge = ~~((Date.now() - Bday) / 31557600000);
       if (usrAge == 0) usrAge = 1;
       return usrAge;
-    };
+    }
 
     // add qualifications
     $scope.degrees = [{}];
@@ -95,7 +95,10 @@ app.controller(
       }
       // error
       else {
-        console.log("error");
+        document.getElementById("error").style.display = "";
+        setTimeout(function () {
+          document.getElementById("error").style.display = "none";
+        }, 2000);
       }
     };
     $scope.delRow = function (index) {
@@ -104,22 +107,36 @@ app.controller(
 
     // edit user
     $scope.editUser = function (user) {
+      var form = document.querySelector(".needs-validation");
+      // reset form-styles
+      form.classList.remove("was-validated");
       // fill the form when editing
-      $scope.name =
-        user.name.title + " " + user.name.first + " " + user.name.last;
+      if (user.name.fullname) {
+        $scope.name = user.name.fullname;
+      } else {
+        $scope.name =
+          user.name.title + " " + user.name.first + " " + user.name.last;
+      }
+      if (user.location.address) {
+        $scope.address = user.location.address;
+      } else {
+        $scope.address =
+          user.location.street.number +
+          " " +
+          user.location.street.name +
+          ", " +
+          user.location.city +
+          ", " +
+          user.location.country;
+      }
+
       $scope.email = user.email;
-      $scope.address =
-        user.location.street.number +
-        " " +
-        user.location.street.name +
-        ", " +
-        user.location.city +
-        ", " +
-        user.location.country;
       $scope.phone = user.phone;
       $scope.dob = new Date(user.dob.date);
       if (user.degrees) {
         $scope.degrees = user.degrees;
+      } else {
+        $scope.degrees = [{}];
       }
     };
     // delete user
@@ -153,26 +170,37 @@ app.controller(
       if (!form.checkValidity()) {
         form.classList.add("was-validated");
       } else {
-        // edit employee in employees
+        // edit employee
         if ($scope.selectedEmployee) {
           $scope.data.forEach((item, index) => {
             if (item.id == $scope.selectedEmployee.id) {
               $scope.data[index] = {
-                name: document.getElementById("userName").value,
-                email: document.getElementById("userEmail").value,
-                phone: document.getElementById("userPhone").value,
+                ...$scope.selectedEmployee,
+                name: {
+                  fullname: $scope.name,
+                },
+                email: $scope.email,
+                phone: $scope.phone,
                 gender: document.getElementById("userGender").value,
-                age: document.getElementById("userAge").textContent,
-                address: document.getElementById("userAddress").value,
-                dob: document.getElementById("userDob").value,
+                location: { address: $scope.address },
+                dob: { date: $scope.dob, age: calcAge() },
                 id: $scope.selectedEmployee.id,
               };
               // add degree to employee
-              if ($scope.degrees.length >= 1) {
+              if (
+                $scope.degrees.length > 1 ||
+                ($scope.degrees[0].education &&
+                  $scope.degrees[0].institute &&
+                  $scope.degrees[0].startDate &&
+                  $scope.degrees[0].endDate &&
+                  $scope.degrees[0].marks)
+              ) {
                 $scope.data[index].degrees = [];
                 $scope.degrees.forEach((element) => {
                   $scope.data[index].degrees.unshift(element);
                 });
+              } else {
+                $scope.data[index].degrees = null;
               }
             }
           });
@@ -181,17 +209,25 @@ app.controller(
         else {
           let temp = $scope.data[0].id + 1;
           $scope.data.unshift({
-            name: document.getElementById("userName").value,
-            email: document.getElementById("userEmail").value,
-            phone: document.getElementById("userPhone").value,
+            name: {
+              fullname: $scope.name,
+            },
+            email: $scope.email,
+            phone: $scope.phone,
             gender: document.getElementById("userGender").value,
-            age: document.getElementById("userAge").textContent,
-            address: document.getElementById("userAddress").value,
-            dob: document.getElementById("userDob").value,
+            location: { address: $scope.address },
+            dob: { date: $scope.dob, age: calcAge() },
             id: temp,
           });
           // add degree to employee
-          if ($scope.degrees.length >= 1) {
+          if (
+            $scope.degrees.length > 1 ||
+            ($scope.degrees[0].education &&
+              $scope.degrees[0].institute &&
+              $scope.degrees[0].startDate &&
+              $scope.degrees[0].endDate &&
+              $scope.degrees[0].marks)
+          ) {
             $scope.data[0].degrees = [];
             $scope.degrees.forEach((element) => {
               $scope.data[0].degrees.unshift(element);
@@ -216,8 +252,6 @@ app.controller(
         document.querySelector(".form-modal-close").click();
         // reload
         setPage($scope.pager.currentPage, $scope.pageSize);
-
-        return;
       }
     };
   }

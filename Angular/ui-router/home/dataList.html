@@ -78,7 +78,10 @@
           data-bs-target="#completeDetails"
           ng-repeat="employee in employees |filter:searchText "
         >
-          <td>{{employee.name.first +" "+ employee.name.last}}</td>
+          <td ng-if="employee.name.fullname">{{employee.name.fullname}}</td>
+          <td ng-if="!employee.name.fullname">
+            {{employee.name.first +" "+ employee.name.last}}
+          </td>
           <td>{{employee.email}}</td>
           <td>{{employee.phone}}</td>
           <td><i class="fas fa-{{employee.gender}}"></i></td>
@@ -156,7 +159,6 @@
             class="btn-close form-modal-close"
             data-bs-dismiss="modal"
             aria-label="Close"
-            ng-click="resetForm()"
           ></button>
         </div>
         <div class="modal-body">
@@ -258,6 +260,9 @@
             <!-- Qualifications -->
             <div class="row g-1 text-center">
               <h5 class="mt-4">Education & Qualification(optional)</h5>
+              <p class="text-danger py-0 my-1" id="error" style="display: none">
+                Please fill all the fields.
+              </p>
               <!-- qualifications -->
               <div class="col-md-12 py-2" ng-repeat="degree in degrees">
                 <div class="row g-1">
@@ -445,16 +450,27 @@
             <div class="carousel-inner">
               <div class="carousel-item active position-relative">
                 <img
+                  class="rounded-circle"
                   ng-if="selectedEmployee.picture"
                   ng-src="{{selectedEmployee.picture.large}}"
                   alt=""
                 />
+                <i
+                  ng-if="!selectedEmployee.picture"
+                  class="fas fa-user-circle mb-2"
+                  style="font-size: 5rem"
+                ></i>
+
                 <div
                   class="py-3 row g-3 text-start"
                   style="overflow-wrap: break-word"
                 >
                   <div class="col-md-6">
-                    <p>
+                    <p ng-if="selectedEmployee.name.fullname">
+                      <span class="fw-bolder">Name:</span>
+                      {{selectedEmployee.name.fullname}}
+                    </p>
+                    <p ng-if="!selectedEmployee.name.fullname">
                       <span class="fw-bolder">Name:</span>
                       {{selectedEmployee.name.title +" "+
                       selectedEmployee.name.first +" "+
@@ -484,9 +500,13 @@
                   </div>
 
                   <div class="col-md-6">
-                    <p>
-                      <span class="fw-bolder">Address:</span>
-                      {{selectedEmployee.location.street.number +" "+
+                    <p ng-if="selectedEmployee.location.address">
+                      <span class="fw-bolder">Address: </span>
+                      {{selectedEmployee.location.address}}
+                    </p>
+                    <p ng-if="!selectedEmployee.location.address">
+                      <span class="fw-bolder">Address: </span
+                      >{{selectedEmployee.location.street.number +" "+
                       selectedEmployee.location.street.name +", "+
                       selectedEmployee.location.city +", "+
                       selectedEmployee.location.country}}
@@ -534,8 +554,8 @@
                   <div class="col">
                     <p>{{degree.education}}</p>
                     <p>{{degree.institute}}</p>
-                    <p>{{degree.startDate}}</p>
-                    <p>{{degree.endDate}}</p>
+                    <p>{{degree.startDate | date}}</p>
+                    <p>{{degree.endDate | date}}</p>
                     <p>{{degree.marks}}</p>
                   </div>
                 </div>
