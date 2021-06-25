@@ -66,7 +66,7 @@ app.controller("chartsController", function ($scope, randomUser) {
     dataSource = {
       chart: {
         caption: "Users based on their age",
-        subCaption: "Data contains 100 results",
+        subCaption: "Data from 100 results",
         xAxisName: "Age group",
         yAxisName: "Number",
         numberSuffix: "",
