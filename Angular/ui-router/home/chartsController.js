@@ -1,28 +1,50 @@
-app.controller("chartsController", function ($scope) {
-  const chartData = [
-    { label: "Venezuela", value: "290" },
-    { label: "Saudi", value: "260" },
-    { label: "Canada", value: "180" },
-    { label: "Iran", value: "140" },
-    { label: "Russia", value: "115" },
-    { label: "UAE", value: "100" },
-    { label: "US", value: "30" },
-    { label: "China", value: "30" },
+app.controller("chartsController", function ($scope, randomUser) {
+  // Initialize chart
+  var chartData = [
+    { label: "Males", value: 50 },
+    { label: "Females", value: 50 },
   ];
-
-  // STEP 3 - Chart Configurations
-  const dataSource = {
+  var dataSource = {
     chart: {
-      caption: "Countries With Most Oil Reserves [2017-18]",
-      subCaption: "In MMbbl = One Million barrels",
-      xAxisName: "Country",
-      yAxisName: "Reserves (MMbbl)",
-      numberSuffix: "K",
-      theme: "carbon",
+      caption: "Comparison of number of males and females",
+      subCaption: "Data contains 100 results",
+      xAxisName: "Gender",
+      yAxisName: "Number",
+      numberSuffix: "",
+      theme: "fusion",
     },
-    // Chart Data - from step 2
     data: chartData,
   };
-  // Preparing the chart data
   $scope.myDataSource = dataSource;
+
+  // update chart with data from api
+  randomUser.getData().then(function (response) {
+    var males = 0;
+    var females = 0;
+    for (i = 0; i < response.data.results.length; i++) {
+      if (response.data.results[i].gender == "male") {
+        males++;
+      } else {
+        females++;
+      }
+    }
+
+    chartData = [
+      { label: "Males", value: males },
+      { label: "Females", value: females },
+    ];
+
+    dataSource = {
+      chart: {
+        caption: "Comparison of number of males and females",
+        subCaption: "Data contains 100 results",
+        xAxisName: "Gender",
+        yAxisName: "Number",
+        numberSuffix: "",
+        theme: "fusion",
+      },
+      data: chartData,
+    };
+    $scope.myDataSource = dataSource;
+  });
 });

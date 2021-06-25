@@ -87,3 +87,11 @@ app.factory("FlashService", function () {
     },
   };
 });
+
+app.factory("randomUser", function apiService($http) {
+  return {
+    getData: function () {
+      return $http.get("https://randomuser.me/api/?results=100");
+    },
+  };
+});
